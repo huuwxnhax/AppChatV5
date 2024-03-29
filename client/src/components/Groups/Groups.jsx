@@ -33,7 +33,26 @@ const Groups = ({ closeModal }) => {
     }
   }
 
+  // Check if form is valid
+  const isFormValid = () => {
+    if (nameGroup.trim() === '') {
+      alert('Please enter a group name');
+      return false;
+    }
+
+    if (addedUsers.length < 2) {
+      alert('Please add at least 2 members to create a group');
+      return false;
+    }
+    return true;
+  }
+
+  // Create group
   const handleCreateGroup = async () => {
+    if (!isFormValid()) {
+      return;
+    }
+    
     const membersGroup = [...addedUsers, user._id];
     
     const { data } = await createChatGroup({ name: nameGroup, members: membersGroup });
@@ -128,7 +147,7 @@ const Groups = ({ closeModal }) => {
         </div>
 
         {/* Other user */}
-        <div className='following-section'>
+        {/* <div className='following-section'>
           <h3>Other people</h3>
           {persons.map((person) => {
             if (person._id !== user._id && !userFollowing.includes(person._id)) {
@@ -159,7 +178,7 @@ const Groups = ({ closeModal }) => {
               return null;
             }
           })}
-        </div>
+        </div> */}
       </div>
 
       {/* button section */}

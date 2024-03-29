@@ -31,7 +31,8 @@
 }
 
 .message {
-  background: var(--buttonBg);
+  /* background: var(--buttonBg); */
+  background: #37b925;
   color: white;
   padding: 0.7rem;
   border-radius: 1rem 1rem 1rem 0;
@@ -102,5 +103,5 @@
 }
 
 .user-Message > img {
-  border-radius: 50%;
+  border-radius: 15%;
 }

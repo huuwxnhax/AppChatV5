@@ -27,7 +27,7 @@ const UserMessage = ({ userId , currentUser}) => {
         src={user.profilePicture ? process.env.REACT_APP_PUBLIC_FOLDER + user.profilePicture : process.env.REACT_APP_PUBLIC_FOLDER + "defaultProfile.png"}
         alt="Profile"
         className="imgProfile"
-        style={{ width: "20px", height: "20px" }}
+        style={{ width: "40px", height: "40px" }}
       />
       {/* <span>{user.firstname} {user.lastname}</span> */}
     </div>

@@ -231,6 +231,7 @@ return (
           </>
         ) : (
           <span className="chatbox-empty-message">
+          {/* add logo here */}
             Tap on a chat to start conversation...
           </span>
         )}

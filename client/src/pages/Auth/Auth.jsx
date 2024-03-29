@@ -13,6 +13,7 @@ const Auth = () => {
     password: "",
     confirmpass: "",
   };
+  
   const loading = useSelector((state) => state.authReducer.loading);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -53,10 +54,9 @@ const Auth = () => {
       {/* left side */}
 
       <div className="a-left">
-        <img src={Logo} alt="" />
-
+        {/* <img src={Logo} alt="" /> */}
         <div className="Webname">
-          <h1>ZKC Media</h1>
+          <h1>App Chat Zolo</h1>
           <h6>Explore the ideas throughout the world</h6>
         </div>
       </div>
@@ -93,7 +93,7 @@ const Auth = () => {
             <input
               required
               type="text"
-              placeholder="Username"
+              placeholder="Email"
               className="infoInput"
               name="username"
               value={data.username}
@@ -152,9 +152,10 @@ const Auth = () => {
             <button
               className="button infoButton"
               type="Submit"
-              disabled={loading}
+              // disabled={loading}
             >
-              {loading ? "Loading..." : isSignUp ? "SignUp" : "Login"}
+              {/* {loading ? "Loading..." : isSignUp ? "SignUp" : "Login"} */}
+              {isSignUp ? "SignUp" : "Login"}
             </button>
           </div>
         </form>
