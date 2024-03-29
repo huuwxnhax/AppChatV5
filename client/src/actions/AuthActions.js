@@ -23,17 +23,19 @@ export const signUp = (formData, navigate) => async (dispatch) => {
   }
 };
 
-// export const sendEmail = (email) => async (dispatch) => {
-//   dispatch({ type: "AUTH_START" });
-//   try {
-//     const { data } = await AuthApi.sendEmail(email);
-//     dispatch({ type: "AUTH_SUCCESS", data: data });
-//   } catch (error) {
-//     console.log(error);
-//     dispatch({ type: "AUTH_FAIL" });
-//   }
-// };
+export const sendOtp = (username) => async (dispatch) => {
+  dispatch({ type: "SEND_START" });
+  try {
+    console.log("data", username);
+    const { data } = await AuthApi.sendOtp(username);
+    dispatch({ type: "SEND_SUCCESS", data: data });
+    console.log("data", data);
 
+  } catch (error) {
+    console.log(error);
+    dispatch({ type: "SEND_FAIL" });
+  }
+}
 
 export const logout = ()=> async(dispatch)=> {
   dispatch({type: "LOG_OUT"})

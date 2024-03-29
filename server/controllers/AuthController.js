@@ -69,7 +69,7 @@ const sendOTP = async (username, otp) => {
 export const sendOtpByEmail = async (req, res) => {
   try {
     const { username } = req.body;
-
+    console.log("body", req.body);
     console.log("username", username)
 
     // Kiểm tra xem người dùng đã tồn tại hay chưa
@@ -123,9 +123,11 @@ export const registerUserWithOTP = async (req, res) => {
     });
 
     // Tạo JWT token
+    // changed
+    const user = await newUser.save();
     const token = jwt.sign(
-      { username: newUser.username, id: newUser._id },
-      process.env.JWT_SECRET,
+      { username: user.username, id: user._id },
+      process.env.JWTKEY,
       { expiresIn: "1h" }
     );
 

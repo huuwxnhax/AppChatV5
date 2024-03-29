@@ -7,4 +7,4 @@ export const logIn= (formData)=> API.post('/auth/login',formData);
 
 export const signUp = (formData) => API.post('/auth/register', formData);
 
-export const sendOtp = (email) => API.post('/auth/send-otp', {email});
+export const sendOtp = (username) => API.post('/auth/send-otp', {username});

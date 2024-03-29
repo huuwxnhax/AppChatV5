@@ -4,6 +4,7 @@ import Logo from "../../img/logo.png";
 import { logIn, signUp } from "../../actions/AuthActions.js";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { sendOtp } from "../../api/AuthRequests.js";
 
 const Auth = () => {
   const initialState = {
@@ -12,6 +13,7 @@ const Auth = () => {
     username: "",
     password: "",
     confirmpass: "",
+    otp: "",
   };
   
   const loading = useSelector((state) => state.authReducer.loading);
@@ -35,6 +37,13 @@ const Auth = () => {
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
+
+  const handleSendOtp = (e) => {
+    e.preventDefault();
+    console.log("data email", data.username)
+    sendOtp(data.username);
+    console.log("data", data)
+  }
 
   // Form Submission
   const handleSubmit = (e) => {
@@ -67,26 +76,30 @@ const Auth = () => {
         <form className="infoForm authForm" onSubmit={handleSubmit}>
           <h3>{isSignUp ? "Register" : "Login"}</h3>
           {isSignUp && (
-            <div>
-              <input
-                required
-                type="text"
-                placeholder="First Name"
-                className="infoInput"
-                name="firstname"
-                value={data.firstname}
-                onChange={handleChange}
-              />
-              <input
-                required
-                type="text"
-                placeholder="Last Name"
-                className="infoInput"
-                name="lastname"
-                value={data.lastname}
-                onChange={handleChange}
-              />
-            </div>
+            <>
+              <div>
+                <input
+                  required
+                  type="text"
+                  placeholder="First Name"
+                  className="infoInput"
+                  name="firstname"
+                  value={data.firstname}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <input
+                  required
+                  type="text"
+                  placeholder="Last Name"
+                  className="infoInput"
+                  name="lastname"
+                  value={data.lastname}
+                  onChange={handleChange}
+                />
+              </div>
+            </>
           )}
 
           <div>
@@ -99,7 +112,15 @@ const Auth = () => {
               value={data.username}
               onChange={handleChange}
             />
+            {isSignUp && (<button 
+              className="button infoButton"
+              type="button"
+              onClick={handleSendOtp}
+            >
+              Send OTP
+            </button>)}
           </div>
+          
           <div>
             <input
               required
@@ -121,6 +142,17 @@ const Auth = () => {
               />
             )}
           </div>
+
+          {isSignUp && (<div>
+            <input 
+              type="text"
+              placeholder="Type OTP"
+              className="infoInput"
+              name="otp"
+              value={data.otp}
+              onChange={handleChange}
+            />
+          </div>)}
 
           <span
             style={{
