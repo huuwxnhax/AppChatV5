@@ -13,7 +13,6 @@ import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import FollowersCard from "../FollowersCard/FollowersCard";
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
-import ProfileCard from "../ProfileCard/ProfileCard";
 import ProfileModal from "../ProfileModal/ProfileModal";
 
 

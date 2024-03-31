@@ -5,8 +5,6 @@ import otpGenerator from "otp-generator";
 import OTP from "../models/otpModel.js";
 import nodeMailer from "nodemailer";
 
-
-
 // Register new user
 export const registerUser = async (req, res) => {
 
@@ -70,7 +68,7 @@ export const sendOtpByEmail = async (req, res) => {
   try {
     const { username } = req.body;
     console.log("body", req.body);
-    console.log("username", username)
+    console.log("username", username);
 
     // Kiểm tra xem người dùng đã tồn tại hay chưa
     const existingUser = await UserModel.findOne({ username });
