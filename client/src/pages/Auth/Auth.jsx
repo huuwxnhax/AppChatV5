@@ -5,6 +5,7 @@ import { logIn, signUp } from "../../actions/AuthActions.js";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { sendOtp } from "../../api/AuthRequests.js";
+// import Toaster from '../../components/Following/Toaster.js';
 
 const Auth = () => {
   const initialState = {
@@ -16,7 +17,8 @@ const Auth = () => {
     otp: "",
   };
   
-  const loading = useSelector((state) => state.authReducer.loading);
+  // const loading = useSelector((state) => state.authReducer.loading);
+  const errors = useSelector((state) => state.authReducer.error);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isSignUp, setIsSignUp] = useState(false);
@@ -24,8 +26,8 @@ const Auth = () => {
   const [data, setData] = useState(initialState);
 
   const [confirmPass, setConfirmPass] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // const dispatch = useDispatch()
 
   // Reset Form
   const resetForm = () => {
@@ -38,25 +40,32 @@ const Auth = () => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const handleSendOtp = (e) => {
-    e.preventDefault();
-    console.log("data email", data.username)
-    sendOtp(data.username);
-    console.log("data", data)
+  const handleSendOtp = async  (e) => {
+      e.preventDefault();
+      console.log("data email", data.username)
+      await sendOtp(data.username);
+      console.log("data", data)
+    
   }
-
-  // Form Submission
-  const handleSubmit = (e) => {
+  
+  const handleSubmit = async (e) => {
     setConfirmPass(true);
     e.preventDefault();
-    if (isSignUp) {
-      data.password === data.confirmpass
-        ? dispatch(signUp(data, navigate))
-        : setConfirmPass(false);
-    } else {
-      dispatch(logIn(data, navigate));
-    }
+      if (isSignUp) {
+        if (data.password === data.confirmpass) {
+          await dispatch(signUp(data, navigate));
+        } else {
+          setConfirmPass(false);
+        }
+      } else {
+        await dispatch(logIn(data, navigate));
+        if (errors) {
+          setErrorMessage("Invalid email or password");
+          console.log("error", errors);
+        }
+      }
   };
+  
 
   return (
     <div className="Auth">
@@ -65,8 +74,10 @@ const Auth = () => {
       <div className="a-left">
         {/* <img src={Logo} alt="" /> */}
         <div className="Webname">
-          <h1>App Chat Zolo</h1>
-          <h6>Explore the ideas throughout the world</h6>
+          <p className="logo">
+            <img src={Logo} alt="" />
+          </p>
+          <h1>App Chat Realtime</h1>
         </div>
       </div>
 
@@ -75,6 +86,7 @@ const Auth = () => {
       <div className="a-right">
         <form className="infoForm authForm" onSubmit={handleSubmit}>
           <h3>{isSignUp ? "Register" : "Login"}</h3>
+          
           {isSignUp && (
             <>
               <div>
@@ -86,6 +98,8 @@ const Auth = () => {
                   name="firstname"
                   value={data.firstname}
                   onChange={handleChange}
+                  pattern="[A-Za-z]{1,32}"
+                  title="First Name wrong format"
                 />
               </div>
               <div>
@@ -97,6 +111,8 @@ const Auth = () => {
                   name="lastname"
                   value={data.lastname}
                   onChange={handleChange}
+                  pattern="[A-Za-z]{1,32}"
+                  title="First Name wrong format"
                 />
               </div>
             </>
@@ -111,6 +127,7 @@ const Auth = () => {
               name="username"
               value={data.username}
               onChange={handleChange}
+              title="Email wrong format"
             />
             {isSignUp && (<button 
               className="button infoButton"
@@ -130,6 +147,8 @@ const Auth = () => {
               name="password"
               value={data.password}
               onChange={handleChange}
+              pattern=".{4,}"
+              title="Password must be at least 4 characters long"
             />
             {isSignUp && (
               <input
@@ -139,6 +158,8 @@ const Auth = () => {
                 name="confirmpass"
                 placeholder="Confirm Password"
                 onChange={handleChange}
+                pattern=".{4,}"
+                title="Password must be at least 4 characters long"
               />
             )}
           </div>
@@ -165,6 +186,13 @@ const Auth = () => {
           >
             *Confirm password is not same
           </span>
+
+          {errorMessage && (
+            <span style={{ color: "red", fontSize: "12px" }}>
+              {errorMessage}
+            </span>
+          )}
+
           <div>
             <span
               style={{
@@ -186,7 +214,6 @@ const Auth = () => {
               type="Submit"
               // disabled={loading}
             >
-              {/* {loading ? "Loading..." : isSignUp ? "SignUp" : "Login"} */}
               {isSignUp ? "SignUp" : "Login"}
             </button>
           </div>

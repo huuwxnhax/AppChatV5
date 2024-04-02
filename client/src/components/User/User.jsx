@@ -23,7 +23,7 @@ const User = ({ person }) => {
 
   return (
     <div className="follower">
-      <div>
+      <div className="follower-section">
         <img
             src={person.profilePicture? process.env.REACT_APP_PUBLIC_FOLDER + person.profilePicture : process.env.REACT_APP_PUBLIC_FOLDER + "defaultProfile.png"}
             alt="Profile"

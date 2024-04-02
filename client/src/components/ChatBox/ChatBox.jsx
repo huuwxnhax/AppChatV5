@@ -6,6 +6,9 @@ import "./ChatBox.css";
 import { format } from "timeago.js";
 import InputEmoji from 'react-input-emoji'
 import UserMessage from "./UserMessage";
+import Logo from "../../img/logo.png";
+
+
 
 const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
   const [userData, setUserData] = useState(null);
@@ -230,10 +233,13 @@ return (
             </div>{" "}
           </>
         ) : (
-          <span className="chatbox-empty-message">
-          {/* add logo here */}
-            Tap on a chat to start conversation...
-          </span>
+          <div className="chatbox-empty-section">
+            <span className="chatbox-empty-message">
+            {/* add logo here */}
+              Tap on a chat to start conversation...
+            </span>
+            <img src={Logo}/>
+          </div>
         )}
       </div>
     </>

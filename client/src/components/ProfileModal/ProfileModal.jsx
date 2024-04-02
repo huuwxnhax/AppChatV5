@@ -62,60 +62,69 @@ const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
       opened={modalOpened}
       onClose={() => setModalOpened(false)}
     >
-      <form className="infoForm" onSubmit={handleSubmit}>
-        <h3>Your Info</h3>
-        <div>
-          <input
-            value={formData.firstname}
-            onChange={handleChange}
-            type="text"
-            placeholder="First Name"
-            name="firstname"
-            className="infoInput"
+      <form className="inforForm" onSubmit={handleSubmit}>
+        <div className="backgroundImage-section">
+          <img
+              src={formData.profilePicture? process.env.REACT_APP_PUBLIC_FOLDER + formData.profilePicture : process.env.REACT_APP_PUBLIC_FOLDER + "defaultProfile.png"}
+              alt="Profile"
+              className="backgroundImage-infor"
           />
-          <input
-            value={formData.lastname}
-            onChange={handleChange}
-            type="text"
-            placeholder="Last Name"
-            name="lastname"
-            className="infoInput"
-          />
+          <span>{formData.firstname} {formData.lastname}</span>
         </div>
-
-        <div>
-          <input
-            value={formData.worksAt}
-            onChange={handleChange}
-            type="text"
-            placeholder="Works at"
-            name="worksAt"
-            className="infoInput"
-          />
-        </div>
-
-        <div>
-          <input
-            value={formData.livesIn}
-            onChange={handleChange}
-            type="text"
-            placeholder="Lives in"
-            name="livesIn"
-            className="infoInput"
-          />
-          <input
-            value={formData.country}
-            onChange={handleChange}
-            type="text"
-            placeholder="Country"
-            name="country"
-            className="infoInput"
-          />
-        </div>
-
-        <div>
-          Profile image
-          <input type="file" name="profileImage" onChange={onImageChange} />
+        <div className="textInfor-section">
+          <div>
+            <input
+              value={formData.firstname}
+              onChange={handleChange}
+              type="text"
+              placeholder="First Name"
+              name="firstname"
+              className="infoInput"
+            />
+            <input
+              value={formData.lastname}
+              onChange={handleChange}
+              type="text"
+              placeholder="Last Name"
+              name="lastname"
+              className="infoInput"
+            />
+          </div>
+  
+          <div>
+            <input
+              value={formData.worksAt}
+              onChange={handleChange}
+              type="text"
+              placeholder="Works at"
+              name="worksAt"
+              className="infoInput"
+            />
+          </div>
+  
+          <div>
+            <input
+              value={formData.livesIn}
+              onChange={handleChange}
+              type="text"
+              placeholder="Lives in"
+              name="livesIn"
+              className="infoInput"
+            />
+            <input
+              value={formData.country}
+              onChange={handleChange}
+              type="text"
+              placeholder="Country"
+              name="country"
+              className="infoInput"
+            />
+          </div>
+  
+          <div>
+            Profile image
+            <input type="file" name="profileImage" onChange={onImageChange} />
+          </div>
         </div>
 
         <button className="button infoButton" type="submit">

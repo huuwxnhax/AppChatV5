@@ -58,10 +58,18 @@
 }
 
 .chatbox-empty-message {
+}
+
+.chatbox-empty-section {
   display: flex;
-  align-self: center;
+  flex-direction: column;
   justify-content: center;
-  font-size: 20px;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 1.5rem;
+  color: var(--textColor);
 }
 
 @media screen and (max-width: 768px) {

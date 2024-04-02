@@ -15,11 +15,9 @@ const InfoCard = () => {
   const [profileUser, setProfileUser] = useState({});
   const { user } = useSelector((state) => state.authReducer.authData);
 
-
   const handleLogOut = ()=> {
     dispatch(logout())
   }
-
 
   useEffect(() => {
     const fetchProfileUser = async () => {

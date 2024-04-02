@@ -34,6 +34,7 @@ const NavIcons = () => {
 
   const handleLogout = () => {
     dispatch(logout());
+    window.location.reload();
   }
   const navigate = useNavigate();
 
