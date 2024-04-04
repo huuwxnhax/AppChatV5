@@ -40,28 +40,26 @@ const Auth = () => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const handleSendOtp = async  (e) => {
-      e.preventDefault();
-      console.log("data email", data.username)
-      await sendOtp(data.username);
-      console.log("data", data)
-    
-  }
+  const handleSendOtp = (e) => {
+    e.preventDefault();
+    console.log("data email", data.username)
+    sendOtp(data.username);
+    console.log("data", data)
+}
   
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     setConfirmPass(true);
     e.preventDefault();
       if (isSignUp) {
         if (data.password === data.confirmpass) {
-          await dispatch(signUp(data, navigate));
+          dispatch(signUp(data, navigate));
         } else {
           setConfirmPass(false);
         }
       } else {
-        await dispatch(logIn(data, navigate));
+        dispatch(logIn(data, navigate));
         if (errors) {
           setErrorMessage("Invalid email or password");
-          console.log("error", errors);
         }
       }
   };
@@ -99,7 +97,7 @@ const Auth = () => {
                   value={data.firstname}
                   onChange={handleChange}
                   pattern="[A-Za-z]{1,32}"
-                  title="First Name wrong format"
+                  title="First name wrong format"
                 />
               </div>
               <div>
@@ -112,7 +110,7 @@ const Auth = () => {
                   value={data.lastname}
                   onChange={handleChange}
                   pattern="[A-Za-z]{1,32}"
-                  title="First Name wrong format"
+                  title="Last name wrong format"
                 />
               </div>
             </>
@@ -121,7 +119,7 @@ const Auth = () => {
           <div>
             <input
               required
-              type="text"
+              type="email"
               placeholder="Email"
               className="infoInput"
               name="username"
@@ -167,7 +165,7 @@ const Auth = () => {
           {isSignUp && (<div>
             <input 
               type="text"
-              placeholder="Type OTP"
+              placeholder="OTP"
               className="infoInput"
               name="otp"
               value={data.otp}

@@ -7,13 +7,13 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 const storage = multer.memoryStorage();
 
 // upload image to memory storage and filter file types
-const upload = multer({ 
+const upload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
-    const allowedFileTypes = /jpeg|jpg|png/;
+    // allow file pdf, doc, docx, jpg, jpeg, png, mp4, video
+    const allowedFileTypes = /jpeg|jpg|png|docx|pdf|mp4/;
     const extension = allowedFileTypes.test(path.extname(file.originalname).toLowerCase());
     const mimeType = allowedFileTypes.test(file.mimetype);
-
     if (extension && mimeType) {
       return cb(null, true);
     } else {
@@ -81,6 +81,19 @@ export const getMessages = async (req, res) => {
   const { chatId } = req.params;
   try {
     const result = await MessageModel.find({ chatId });
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+// delete message
+export const deleteMessage = async (req, res) => {
+  const { _id } = req.params;
+  console.log("id:", _id);
+  try {
+    const result = await MessageModel.findByIdAndDelete(_id);
+    console.log("Result:", result);
     res.status(200).json(result);
   } catch (error) {
     res.status(500).json(error);
