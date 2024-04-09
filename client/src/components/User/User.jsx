@@ -16,9 +16,9 @@ const User = ({ person }) => {
     setFollowing((prev) => !prev);
   };
 
-  useEffect(() => {
-    console.log(person);
-  } , [])
+  // useEffect(() => {
+  //   console.log(person);
+  // } , [])
 
 
   return (

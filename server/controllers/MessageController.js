@@ -11,7 +11,7 @@ const upload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
     // allow file pdf, doc, docx, jpg, jpeg, png, mp4, video
-    const allowedFileTypes = /jpeg|jpg|png|docx|pdf|mp4/;
+    const allowedFileTypes = /jpeg|jpg|png|docx|doc|pdf|mp4/;
     const extension = allowedFileTypes.test(path.extname(file.originalname).toLowerCase());
     const mimeType = allowedFileTypes.test(file.mimetype);
     if (extension && mimeType) {
@@ -77,6 +77,7 @@ export const addMessage = async (req, res) => {
             pdfUrl = fileKey;
             break;
           case ".docx":
+          case ".doc":
             docxUrl = fileKey;
             break;
           default:

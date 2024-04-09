@@ -53,7 +53,6 @@ const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
     const fetchMessages = async () => {
       try {
         const { data } = await getMessages(chat._id);
-        console.log("Messages: ", data);
         setMessages(data);
       } catch (error) {
         console.log(error);
@@ -69,45 +68,95 @@ const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
 
   
   // Send Message
-  const handleSend = async (e, senderId, chatId) => {
-    // Create form data
-    const formData = new FormData();
-    formData.append("senderId", senderId);
-    formData.append("text", newMessage);
-    formData.append("chatId", chatId);
-    formData.append("image", selectFile);
+  // const handleSend = async (e, senderId, chatId) => {
+  //   // Create form data
+  //   const formData = new FormData();
+  //   formData.append("senderId", senderId);
+  //   formData.append("text", newMessage);
+  //   formData.append("chatId", chatId);
+  //   formData.append("image", selectFile);
 
+  //   e.preventDefault();
+
+  //   const message = {
+  //     senderId: currentUser,
+  //     text: newMessage,
+  //     chatId: chat._id,
+  //     imageUrl: selectFile,
+  //     // pdfUrl: selectFile,
+  //     // docxUrl: selectFile,
+  //     // videoUrl: selectFile,
+  //   };
+    
+  //     // send message to database
+  //     try {
+  //       const { data } = await addMessage(formData);
+  //       setMessages([...messages, data]);
+  //       // Send message to all members
+  //       const messageData = {
+  //         ...message,
+  //         receiverIds: chat.members.filter(memberId => memberId !== currentUser),
+  //       };
+  //       console.log("messageData: ", messageData)
+  //       setSendMessage(messageData);
+
+  //       setNewMessage("");
+  //       setSelectFile(null);
+  //       console.log("Message Sent to database: ", data);
+  //     } catch {
+  //       console.log("error");
+  //     }
+  // };
+
+  // Gửi tin nhắn và sau đó gửi tin nhắn đến tất cả các thành viên của cuộc trò chuyện
+const handleSend = async (e, senderId, chatId) => {
     e.preventDefault();
 
-    const message = {
-      senderId: currentUser,
-      text: newMessage,
-      chatId: chat._id,
-      imageUrl: selectFile,
-      // pdfUrl: selectFile,
-      // docxUrl: selectFile,
-      // videoUrl: selectFile,
-    };
-    
-      // send message to database
-      try {
-        const { data } = await addMessage(formData);
-        setMessages([...messages, data]);
-        // Send message to all members
-        const messageData = {
-          ...message,
-          receiverIds: chat.members.filter(memberId => memberId !== currentUser),
-        };
-        console.log("messageData: ", messageData)
-        setSendMessage(messageData);
+  if (newMessage.trim() !== '' || selectFile !== null) {
+    try {
+      // Tạo form data để gửi tin nhắn xuống cơ sở dữ liệu
+      const formData = new FormData();
+      formData.append("senderId", senderId);
+      formData.append("text", newMessage);
+      formData.append("chatId", chatId);
+      formData.append("image", selectFile);
 
-        setNewMessage("");
-        setSelectFile(null);
-        console.log("Message Sent to database: ", data);
-      } catch {
-        console.log("error");
-      }
-  };
+      // Gửi tin nhắn xuống cơ sở dữ liệu
+      const { data: newMessageData } = await addMessage(formData);
+      setMessages([...messages, newMessageData]);
+
+      // Lấy tin nhắn từ cơ sở dữ liệu
+      // (Nếu cần, bạn có thể sử dụng một hàm hoặc phương thức khác để lấy tin nhắn từ cơ sở dữ liệu)
+      // Ở đây, tôi giả sử rằng bạn đã nhận được tin nhắn mới từ cơ sở dữ liệu và đặt tên là newMessageData
+
+      // Gửi tin nhắn đến tất cả các thành viên của cuộc trò chuyện
+      const messageData = {
+        senderId: currentUser,
+        text: newMessageData.text,
+        chatId: newMessageData.chatId,
+        imageUrl: newMessageData.imageUrl,
+        pdfUrl: newMessageData.pdfUrl,
+        docxUrl: newMessageData.docxUrl,
+        videoUrl: newMessageData.videoUrl,
+        receiverIds: chat.members.filter(memberId => memberId !== currentUser),
+      };
+
+      // Gửi tin nhắn đến tất cả các thành viên của cuộc trò chuyện thông qua máy chủ socket
+      setSendMessage(messageData);
+
+      // Xóa tin nhắn mới và file đã chọn sau khi gửi
+      setNewMessage("");
+      setSelectFile(null);
+
+      console.log("Message Sent to database: ", newMessageData);
+    } catch (error) {
+      console.log("Error sending message: ", error);
+    }
+  } else {
+    console.log("Please enter a message or select a file to send.");
+  }
+};
+
 
 // Receive Message from parent component
 useEffect(()=> {
@@ -224,6 +273,11 @@ return (
               <InputEmoji
                 value={newMessage}
                 onChange={handleChange}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSend(e, currentUser, chat._id);
+                  }
+                }}
               />
               
               <div className="send-button button" onClick = {(e) => handleSend(e, currentUser, chat._id)}>Send</div>
