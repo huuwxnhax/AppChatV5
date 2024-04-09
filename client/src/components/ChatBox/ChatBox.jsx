@@ -14,12 +14,13 @@ const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
   const [userData, setUserData] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectFile, setSelectFile] = useState(null);
+
 
   // Handle image selection
-  const handleImageChange = (event, senderId, chatId) => {
+  const handleFileChange = (event, senderId, chatId) => {
     const file = event.target.files[0];
-    setSelectedImage(file);
+    setSelectFile(file);
   };
 
   const handleChange = (newMessage)=> {
@@ -33,12 +34,12 @@ const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
       try {
         if(chat.name) {
           setUserData(chat);
-          console.log(chat);
+          // console.log(chat);
           return;
         }
         const { data } = await getUser(userId);
         setUserData(data);
-        console.log(data);
+        // console.log(data);
       } catch (error) {
         console.log(error);
       }
@@ -47,15 +48,12 @@ const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
     if (chat !== null) getUserData();
   }, [chat, currentUser]);
 
-  useEffect(() => {
-    console.log(userData);
-  }, [userData]);
-
   // fetch messages
   useEffect(() => {
     const fetchMessages = async () => {
       try {
         const { data } = await getMessages(chat._id);
+        console.log("Messages: ", data);
         setMessages(data);
       } catch (error) {
         console.log(error);
@@ -77,47 +75,35 @@ const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
     formData.append("senderId", senderId);
     formData.append("text", newMessage);
     formData.append("chatId", chatId);
-    formData.append("image", selectedImage);
+    formData.append("image", selectFile);
 
     e.preventDefault();
+
     const message = {
       senderId: currentUser,
       text: newMessage,
       chatId: chat._id,
-      imageUrl: selectedImage,
+      imageUrl: selectFile,
+      // pdfUrl: selectFile,
+      // docxUrl: selectFile,
+      // videoUrl: selectFile,
     };
-    // const receiverId = chat.members.find((id) => id !== currentUser);
-
-    const messageData = {
-      ...message,
-      receiverIds: chat.members.filter(memberId => memberId !== currentUser),
-    };
-    setSendMessage(messageData);
-    console.log("Sending from chatbox to :", chat.members.filter(memberId => memberId !== currentUser));
-    console.log("Data: ", messageData);
-
-    // Send message to all members
-    // chat.members.forEach(async (memberId) => {
-    //   if (memberId !== currentUser) {
-    //     const receiverId = memberId;
-    //     const messageData = {
-    //       ...message,
-    //       receiverId,
-    //     };
-    //     console.log("Sending from chatbox to :", receiverId);
-    //     setSendMessage(messageData);
-    //   }});
-
-    // send message to socket server
-      // setSendMessage({ ...message, receiverId });
     
       // send message to database
       try {
         const { data } = await addMessage(formData);
         setMessages([...messages, data]);
+        // Send message to all members
+        const messageData = {
+          ...message,
+          receiverIds: chat.members.filter(memberId => memberId !== currentUser),
+        };
+        console.log("messageData: ", messageData)
+        setSendMessage(messageData);
+
         setNewMessage("");
-        setSelectedImage(null);
-        console.log("Message Sent: ", data);
+        setSelectFile(null);
+        console.log("Message Sent to database: ", data);
       } catch {
         console.log("error");
       }
@@ -125,17 +111,14 @@ const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
 
 // Receive Message from parent component
 useEffect(()=> {
-  console.log("Message Arrived: ", receivedMessage)
   if (receivedMessage !== null && receivedMessage.chatId === chat._id) {
-    setMessages([...messages, receivedMessage]);
+    setMessages(prevMessages => [...prevMessages, receivedMessage]);
+    console.log("Message Received: ", receivedMessage);
   }
-
 },[receivedMessage])
 
   const scroll = useRef();
-  const imageRef = useRef();
-
-
+  const fileRef = useRef();
 
 return (
     <>
@@ -186,7 +169,8 @@ return (
                   message.senderId === currentUser
                   ? "message-item own-item"
                   : "message-item"
-                }>
+                }
+                >
                   <UserMessage userId={message.senderId} currentUser={currentUser}/>
                   <div 
                     className={
@@ -200,10 +184,24 @@ return (
                         src={`https://appchatn6iuh.s3.amazonaws.com/${message.imageUrl}`}
                         alt=""
                         style={{ maxWidth: "200px", maxHeight: "200px" }}
-                      />
+                      />                    
+                    ) : message.pdfUrl ? (
+                      <a href={`https://appchatn6iuh.s3.amazonaws.com/${message.pdfUrl}`} target="_blank" rel="noopener noreferrer">
+                        Download PDF
+                      </a>
+                    ) : message.docxUrl ? (
+                      <a href={`https://appchatn6iuh.s3.amazonaws.com/${message.docxUrl}`} target="_blank" rel="noopener noreferrer">
+                        Download DOCX
+                      </a>
+                    ) : message.videoUrl ? (
+                      <video width="320" height="240" controls>
+                        <source src={`https://appchatn6iuh.s3.amazonaws.com/${message.videoUrl}`} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
                     ) : (
-                        <span>{message.text}</span>
+                      <span>{message.text}</span>
                     )}
+
                     <span className="createAt">{format(message.createdAt)}</span>
                   </div>
                 </div>
@@ -212,15 +210,15 @@ return (
             {/* chat-sender */}
             <div className="chat-sender">
 
-              {/* Open Image Upload Dialog */}
-              <div onClick={() => imageRef.current.click()}>+</div>
+              {/* Open file Upload Dialog */}
+              <div onClick={() => fileRef.current.click()}>+</div>
               <input
                 type="file"
                 name="image"
                 id=""
                 style={{ display: "none" }}
-                ref={imageRef}
-                onChange={(e) => handleImageChange(e, currentUser, chat._id)}
+                ref={fileRef}
+                onChange={(e) => handleFileChange(e, currentUser, chat._id)}
               />
 
               <InputEmoji

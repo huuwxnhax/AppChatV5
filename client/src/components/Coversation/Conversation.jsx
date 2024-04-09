@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { getUser } from "../../api/UserRequests";
 import avatarGroupDefault from "../../img/avatar-group.png";
+
 const Conversation = ({ isGroup, data, currentUser, online }) => {
 
   const [userData, setUserData] = useState(null)

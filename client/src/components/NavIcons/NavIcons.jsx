@@ -28,7 +28,7 @@ const style = {
   p: 4,
 };
 
-const NavIcons = () => {
+const NavIcons = ({ handleSelectUser }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.authReducer.authData);
 
@@ -119,7 +119,10 @@ const NavIcons = () => {
             open={openDrawer} 
             onClose={tonggleDrawer}
           >
-            <Following />
+            <Following 
+              handleSelectUser={handleSelectUser} 
+              closeModal={tonggleDrawer}
+            />
           </Drawer>
   
           {/*  profile */}

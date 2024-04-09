@@ -6,7 +6,7 @@ import { createChat, findChat } from '../../api/ChatRequests';
 import Toaster from './Toaster';
 import { updateChatData } from '../../actions/ChatAction';
 
-const Following = () => {
+const Following = ({ handleSelectUser,  closeModal }) => {
     const [userFollowing, setUserFollowing] = useState([]);
     const [followingDetails, setFollowingDetails] = useState([]);
     const { user } = useSelector((state) => state.authReducer.authData);
@@ -19,24 +19,25 @@ const Following = () => {
         const fetchFollowing = async () => {
             const { data } = await getUser(user._id);
             const following = data.following;
-            console.log(following);
+            // console.log(following);
             setUserFollowing(following);
 
             const followingInfoPromises = following.map(async (userId) => {
                 const userInfo = await getUser(userId);
-                console.log("UserInfor:"  + userInfo);
+                // console.log("UserInfor:"  + userInfo);
                 return userInfo;
             });
             try {
                 const followingDetailsData = await Promise.all(followingInfoPromises);
                 setFollowingDetails(followingDetailsData);
-                console.log(followingDetailsData);
+                // console.log(followingDetailsData);
             } catch (error) {
                 console.error('Error fetching following details:', error);
             }
         }
         fetchFollowing();
     }, [user._id])
+
 
     const handleCreateChat = async (userId) => {
         try {
@@ -45,22 +46,24 @@ const Following = () => {
             console.log(existingChat);
           if (existingChat.data !== null) {
             // If a chat exists, navigate to that chat
-            console.log(`Redirecting to existing chat with ID: ${existingChat._id}`);
-            setHasChat(true);
+            // console.log(`Redirecting to existing chat with ID: ${existingChat.data._id}`);
+            // setHasChat(true);
+            handleSelectUser(existingChat.data);
           } else {
             // If a chat doesn't exist, create a new chat
             const { data } = await createChat({ senderId: user._id, receiverId: userId });
-            console.log(data);
-      
+            
             // Check if the chat was successfully created
             if (data._id) {
                 // Update the chats state with the new chat
                 dispatch(updateChatData([...chatdata, data]));
-                console.log(`Redirecting to new chat with ID: ${data._id}`);
+                handleSelectUser(data);
+                // console.log(`Redirecting to new chat with ID: ${data._id}`);
             } else {
               console.error('Failed to create or redirect to chat');
             }
           }
+          closeModal();
         } catch (error) {
           console.error('Error creating or redirecting to chat:', error);
         }

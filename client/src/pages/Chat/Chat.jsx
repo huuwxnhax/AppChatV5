@@ -22,6 +22,8 @@ const Chat = () => {
   const [currentChat, setCurrentChat] = useState(null);
   const [sendMessage, setSendMessage] = useState(null);
   const [receivedMessage, setReceivedMessage] = useState(null);
+  // const [selectedUser, setSelectedUser] = useState(null);
+
   // Get the chat in chat section
   useEffect(() => {
     const getChats = async () => {
@@ -55,18 +57,30 @@ const Chat = () => {
   // Send Message to socket server
   useEffect(() => {
     if (sendMessage!==null) {
-      socket.current.emit("send-message", sendMessage);}
+      socket.current.emit("send-message", sendMessage);
+      console.log("Message Sent to socket: ", sendMessage);
+    }
   }, [sendMessage]); 
 
 
   // Get the message from socket server
   useEffect(() => {
-    socket.current.on("receive-message", (data) => {
-      console.log("Socket Connection Status:", socket.current.connected);
-      setReceivedMessage(data);
-      console.log("Message Received: ", data);
-    });
-  }, [socket]);
+      socket.current.on("receive-message", (data) => {
+        // if (data.imageUrl instanceof ArrayBuffer) {
+        //   const imageUrl = URL.createObjectURL(new Blob([data.imageUrl]));
+        //   data.imageUrl = imageUrl;
+        // }
+        setReceivedMessage(data);
+        console.log("Message Received: ", data);
+      });
+    }, [socket]);
+
+
+
+  const handleSelectUser = (userData) => {
+    // Xử lý khi người dùng được chọn
+    setCurrentChat(userData);
+  };
   
 
 
@@ -123,7 +137,7 @@ const Chat = () => {
 
       <div className="Right-side-chat">
         <div style={{ width: "20rem", alignSelf: "flex-end" }}>
-          <NavIcons />
+          <NavIcons handleSelectUser={handleSelectUser}/>
         </div>
         <ChatBox
           chat={currentChat}

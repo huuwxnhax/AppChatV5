@@ -26,7 +26,7 @@ io.on("connection", (socket) => {
       io.emit("get-users", activeUsers);
     });
   
-    //send message to a specific user
+    // send message to a specific user
     // socket.on("send-message", (data) => {
     //   const { receiverId } = data;
     //   console.log("Receiver Id: ", receiverId);
@@ -41,7 +41,7 @@ io.on("connection", (socket) => {
 
     // send message to a group
     socket.on("send-message", (data) => {
-      const { chatId, receiverIds } = data;
+      const { receiverIds } = data;
       // Find all users in the chat
       const chatMembers = activeUsers.filter((user) => receiverIds.includes(user.userId));
       // Emit the message to each member's socket
@@ -52,5 +52,7 @@ io.on("connection", (socket) => {
         }
       });
     });
+
+
     
   });

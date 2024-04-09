@@ -56,7 +56,7 @@ const Groups = ({ closeModal }) => {
     const membersGroup = [...addedUsers, user._id];
     
     const { data } = await createChatGroup({ name: nameGroup, members: membersGroup });
-    console.log(data);
+    // console.log(data);
     dispatch(updateChatData([...chatdata, data]));
     closeModal();
   }
@@ -72,7 +72,7 @@ const Groups = ({ closeModal }) => {
 
           const followingInfoPromises = following.map(async (userId) => {
               const userInfo = await getUser(userId);
-              console.log("UserInfor:"  + userInfo);
+              // console.log("UserInfor:"  + userInfo);
               return userInfo;
           });
           try {

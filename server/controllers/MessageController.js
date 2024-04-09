@@ -34,44 +34,79 @@ const s3 = new S3Client({
 // Middleware to handle file upload
 const singleFileUpload = upload.single("image");
 
+
+// Add Message
 export const addMessage = async (req, res) => {
-  // Handle file upload error
+  // Xử lý lỗi khi upload file
   singleFileUpload(req, res, async (uploadError) => {
     if (uploadError) {
       return res.status(400).json({ error: uploadError.message });
     }
 
-    // Get data from request body
+    // Lấy dữ liệu từ body của request
     const { chatId, senderId, text } = req.body;
-    const imageUrl = req.file ? `uploads/${Date.now()}_${chatId}_${senderId}.png` : null;
 
+    // Kiểm tra xem có file được gửi lên không và lưu trữ đường dẫn tương ứng
+    let imageUrl, videoUrl, pdfUrl, docxUrl;
+    if (req.file) {
+      const fileExtension = path.extname(req.file.originalname).toLowerCase();
+      const uniqueFileName = `${Date.now()}_${chatId}_${senderId}${fileExtension}`;
+      const fileKey = `uploads/${uniqueFileName}`;
+
+      const uploadParams = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: fileKey,
+        Body: req.file.buffer,
+        ACL: "public-read",
+      };
+
+      try {
+        await s3.send(new PutObjectCommand(uploadParams));
+
+        // Xác định loại tệp và lưu đường dẫn tương ứng
+        switch (fileExtension) {
+          case ".jpeg":
+          case ".jpg":
+          case ".png":
+            imageUrl = fileKey;
+            break;
+          case ".mp4":
+            videoUrl = fileKey;
+            break;
+          case ".pdf":
+            pdfUrl = fileKey;
+            break;
+          case ".docx":
+            docxUrl = fileKey;
+            break;
+          default:
+            // Xử lý loại tệp khác nếu cần
+            break;
+        }
+      } catch (error) {
+        console.error("Error uploading file to S3:", error);
+        return res.status(500).json({ error: "Unable to upload file to S3" });
+      }
+    }
+
+    // Tạo một tin nhắn mới với các trường dữ liệu
     const message = new MessageModel({
       chatId,
       senderId,
       text,
-      imageUrl
+      imageUrl,
+      videoUrl,
+      pdfUrl,
+      docxUrl
     });
 
     try {
-      if (req.file) {
-        const uploadParams = {
-          Bucket: process.env.AWS_BUCKET_NAME,
-          Key: imageUrl,
-          Body: req.file.buffer,
-          ACL: "public-read",
-        };
-
-        console.log("Upload Params:", uploadParams);
-
-        // Use AWS SDK v3 to upload to S3
-        await s3.send(new PutObjectCommand(uploadParams));
-      }
-
+      // Lưu tin nhắn vào cơ sở dữ liệu
       const result = await message.save();
       res.status(200).json(result);
     } catch (error) {
-      console.error("Error:", error);
-      res.status(500).json(error);
+      console.error("Error saving message to database:", error);
+      res.status(500).json({ error: "Unable to save message to database" });
     }
   });
 };
