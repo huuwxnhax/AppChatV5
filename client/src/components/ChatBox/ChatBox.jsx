@@ -7,14 +7,24 @@ import { format } from "timeago.js";
 import InputEmoji from 'react-input-emoji'
 import UserMessage from "./UserMessage";
 import Logo from "../../img/logo.png";
+import MenuIcon from '@mui/icons-material/Menu';
+import { IconButton, Menu, MenuItem, Modal, Backdrop, Fade, Box } from '@mui/material';
+import MembersModal from "../Modal/MembersModal";
+import FollowModal from "../Modal/FollowModal";
+import { leaveGroup } from "../../api/GroupRequests";
 
 
 
-const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
+const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage, groupChats, updateGroupChatList }) => {
   const [userData, setUserData] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [selectFile, setSelectFile] = useState(null);
+
+
+  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+  const [openMembersModal, setOpenMembersModal] = useState(false);
+  const [openFollowModal, setOpenFollowModal] = useState(false);
 
 
   // Handle image selection
@@ -26,6 +36,63 @@ const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
   const handleChange = (newMessage)=> {
     setNewMessage(newMessage)
   }
+
+  const handleOpenMembersModal = () => {
+    setOpenMembersModal(true);
+  };
+
+  const handleCloseMembersModal = () => {
+    setOpenMembersModal(false);
+  };
+
+  const handleOpenFollowModal = () => {
+    setOpenFollowModal(true);
+  };
+
+  const handleCloseFollowModal = () => {
+    setOpenFollowModal(false);
+  };
+
+  const handleMenuOpen = (event) => {
+    setMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleLeaveGroup = async () => {
+    try {
+      // Leave group
+      const { data } = await leaveGroup({ groupId: chat._id, memberIdToLeave: currentUser, requestingUserId: currentUser});
+      updateGroupChatList(chat._id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleMenuItemClick = (action) => {
+    switch (action) {
+      case 'viewMembers':
+        handleOpenMembersModal();
+        break;
+      case 'addMember':
+        handleOpenFollowModal();
+        break;
+      case 'leaveGroup':
+        handleLeaveGroup();
+        break;
+      default:
+        break;
+    }
+    setMenuAnchorEl(null); // Đóng menu dropdown sau khi thực hiện hành động
+  };
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 4,
+  };
 
   // fetching data for header
   useEffect(() => {
@@ -169,6 +236,7 @@ useEffect(()=> {
   const scroll = useRef();
   const fileRef = useRef();
 
+
 return (
     <>
       <div className="ChatBox-container">
@@ -176,13 +244,34 @@ return (
           <>
             {/* chat-header */}
             <div className="chat-header">
-              <div className="follower">
+              <div className="header-content">
                 <div>
                   {chat.name ? (
-                    <div className="name"><span>{chat.name}</span></div>
-        ): (
-          <>
-            <img
+                    <div className="heading-group">
+                      <div className="name"><span>{chat.name}</span></div>
+                      <IconButton onClick={handleMenuOpen}>
+                        <MenuIcon />
+                      </IconButton>
+                      <Menu
+                        anchorEl={menuAnchorEl}
+                        open={Boolean(menuAnchorEl)}
+                        onClose={() => setMenuAnchorEl(null)}
+                      >
+                        <MenuItem onClick={() => handleMenuItemClick('viewMembers')}>
+                          List Members
+                        </MenuItem>
+                        <MenuItem onClick={() => handleMenuItemClick('addMember')}>
+                          Add Members
+                        </MenuItem>
+                        <MenuItem onClick={() => handleMenuItemClick('leaveGroup')}>
+                          Leave Group
+                        </MenuItem>
+                      </Menu>
+                      
+                    </div>
+                ): (
+                  <>
+                    <img
                       src={
                         userData?.profilePicture
                           ? process.env.REACT_APP_PUBLIC_FOLDER +
@@ -294,6 +383,49 @@ return (
           </div>
         )}
       </div>
+      {/* Modal for viewing members */}
+      <Modal
+        open={openMembersModal}
+                        onClose={handleCloseMembersModal}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                        anima="true"
+                        closeAfterTransition
+                        slots={{backdrop: Backdrop}}
+                        slotProps={{
+                          backdrop: {
+                            timeout: 500,
+                          }
+                        }}
+                      >
+                        <Fade in={openMembersModal}>
+                          <Box sx={style} className="box-modal">
+                            <MembersModal closeModal={handleCloseMembersModal} groupChats={chat}/>
+                          </Box>
+                        </Fade>
+                      </Modal>
+
+                      {/* Modal for adding members */}
+                      <Modal
+                        open={openFollowModal}
+                        onClose={handleCloseFollowModal}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                        anima="true"
+                        closeAfterTransition
+                        slots={{backdrop: Backdrop}}
+                        slotProps={{
+                          backdrop: {
+                            timeout: 500,
+                          }
+                        }}
+                      >
+                        <Fade in={openFollowModal}>
+                          <Box sx={style} className="box-modal">
+                            <FollowModal closeModal={handleCloseFollowModal} groupChats={chat}/>
+                          </Box>
+                        </Fade>
+                      </Modal>
     </>
   );
 };

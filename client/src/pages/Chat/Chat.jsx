@@ -90,6 +90,16 @@ const Chat = () => {
     return online ? true : false;
   };
 
+  const updateGroupChatList = async (groupId) => {
+    try {
+      const updatedGroupChats = groupChats.filter(group => group._id !== groupId);
+      setGroupChats(updatedGroupChats);
+      setCurrentChat(null);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="Chat">
       {/* Left Side */}
@@ -144,6 +154,8 @@ const Chat = () => {
           currentUser={user._id}
           setSendMessage={setSendMessage}
           receivedMessage={receivedMessage}
+          groupChats={groupChats}
+          updateGroupChatList={updateGroupChatList}
         />
       </div>
     </div>

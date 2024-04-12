@@ -18,6 +18,7 @@ const Following = ({ handleSelectUser,  closeModal }) => {
     useEffect(() => {
         const fetchFollowing = async () => {
             const { data } = await getUser(user._id);
+            console.log(data);
             const following = data.following;
             // console.log(following);
             setUserFollowing(following);
@@ -25,12 +26,13 @@ const Following = ({ handleSelectUser,  closeModal }) => {
             const followingInfoPromises = following.map(async (userId) => {
                 const userInfo = await getUser(userId);
                 // console.log("UserInfor:"  + userInfo);
+
                 return userInfo;
             });
             try {
                 const followingDetailsData = await Promise.all(followingInfoPromises);
                 setFollowingDetails(followingDetailsData);
-                // console.log(followingDetailsData);
+                console.log(followingDetailsData);
             } catch (error) {
                 console.error('Error fetching following details:', error);
             }

@@ -105,3 +105,22 @@
 .user-Message > img {
   border-radius: 15%;
 }
+
+.heading-group {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.header-content > div {
+  display: flex;
+  gap: 10px;
+}

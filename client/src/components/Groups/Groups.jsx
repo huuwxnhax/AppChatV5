@@ -55,7 +55,7 @@ const Groups = ({ closeModal }) => {
     
     const membersGroup = [...addedUsers, user._id];
     
-    const { data } = await createChatGroup({ name: nameGroup, members: membersGroup });
+    const { data } = await createChatGroup({ name: nameGroup, creator: user._id ,members: membersGroup });
     // console.log(data);
     dispatch(updateChatData([...chatdata, data]));
     closeModal();
@@ -86,13 +86,13 @@ const Groups = ({ closeModal }) => {
   }, [user._id])
 
   // get all users
-  useEffect(() => {
-    const fetchPersons = async () => {
-      const { data } = await getAllUser();
-      setPersons(data);
-    };
-    fetchPersons();
-  }, []);
+  // useEffect(() => {
+  //   const fetchPersons = async () => {
+  //     const { data } = await getAllUser();
+  //     setPersons(data);
+  //   };
+  //   fetchPersons();
+  // }, []);
 
 
   return (
