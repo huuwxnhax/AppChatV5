@@ -69,12 +69,17 @@ const MembersModal = ({groupChats}) => {
                     {member._id === groupChats.creator ? (
                       <span>Admin</span>
                     ) : (
-                      <button
-                        className="button fc-button"
-                        onClick={() => handleDelete(member._id)}
-                      >
-                        Delete
-                      </button>
+                       user._id === groupChats.creator ? (
+                          <button
+                            className="button fc-button"
+                            onClick={() => handleDelete(member._id)}
+                          >
+                            Remove
+                          </button>
+                        ) : (
+                          <span>Member</span>
+                        )
+                      
                     )}
                 </div>
             ))}

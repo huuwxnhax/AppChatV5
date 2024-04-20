@@ -124,3 +124,8 @@
   display: flex;
   gap: 10px;
 }
+
+.GroupActionIcon {
+  display: flex;
+  left: 980px;
+}

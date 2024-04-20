@@ -11,7 +11,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { IconButton, Menu, MenuItem, Modal, Backdrop, Fade, Box } from '@mui/material';
 import MembersModal from "../Modal/MembersModal";
 import FollowModal from "../Modal/FollowModal";
-import { leaveGroup } from "../../api/GroupRequests";
+import { deleteGroup, leaveGroup } from "../../api/GroupRequests";
 
 
 
@@ -67,6 +67,16 @@ const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage, groupCha
     }
   };
 
+  const handleDeleteGroup = async () => {
+    try {
+      // Delete group
+      const { data } = await deleteGroup({ groupId: chat._id, requestingUserId: currentUser });
+      updateGroupChatList(chat._id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleMenuItemClick = (action) => {
     switch (action) {
       case 'viewMembers':
@@ -77,6 +87,9 @@ const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage, groupCha
         break;
       case 'leaveGroup':
         handleLeaveGroup();
+        break;
+      case 'deleteGroup':
+        handleDeleteGroup();
         break;
       default:
         break;
@@ -119,8 +132,8 @@ const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage, groupCha
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const { data } = await getMessages(chat._id);
-        setMessages(data);
+          const { data } = await getMessages(chat._id);
+          setMessages(data);
       } catch (error) {
         console.log(error);
       }
@@ -226,12 +239,25 @@ const handleSend = async (e, senderId, chatId) => {
 
 
 // Receive Message from parent component
-useEffect(()=> {
-  if (receivedMessage !== null && receivedMessage.chatId === chat._id) {
+// useEffect(()=> {
+//   if (receivedMessage !== null && receivedMessage.chatId === chat._id) {
+//     setMessages(prevMessages => [...prevMessages, receivedMessage]);
+//     console.log("Message Received: ", receivedMessage);
+//   }
+// },[receivedMessage, chat])
+
+useEffect(() => {
+  if (receivedMessage !== null && receivedMessage.chatId) {
+    if (!chat || receivedMessage.chatId !== chat._id) {
+      // Nếu tin nhắn nhận được không thuộc chat hiện tại, không cập nhật messages
+      return;
+    }
     setMessages(prevMessages => [...prevMessages, receivedMessage]);
     console.log("Message Received: ", receivedMessage);
   }
-},[receivedMessage])
+}, [receivedMessage, chat]);
+
+
 
   const scroll = useRef();
   const fileRef = useRef();
@@ -249,7 +275,7 @@ return (
                   {chat.name ? (
                     <div className="heading-group">
                       <div className="name"><span>{chat.name}</span></div>
-                      <IconButton onClick={handleMenuOpen}>
+                      <IconButton className="" onClick={handleMenuOpen}>
                         <MenuIcon />
                       </IconButton>
                       <Menu
@@ -266,6 +292,11 @@ return (
                         <MenuItem onClick={() => handleMenuItemClick('leaveGroup')}>
                           Leave Group
                         </MenuItem>
+                        {currentUser === chat.creator && (
+                          <MenuItem onClick={() => handleMenuItemClick('deleteGroup')}>
+                            Delete Group
+                          </MenuItem>
+                        )}
                       </Menu>
                       
                     </div>

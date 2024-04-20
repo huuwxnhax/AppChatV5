@@ -1,5 +1,5 @@
 import express from 'express';
-import { addMemberToGroup, createChatGroup, leaveGroup, memberGroups, removeMemberFromGroup, userChatGroups } from '../controllers/GroupController.js';
+import { addMemberToGroup, createChatGroup, deleteGroup, leaveGroup, memberGroups, removeMemberFromGroup, userChatGroups } from '../controllers/GroupController.js';
 
 const router = express.Router();
 
@@ -9,6 +9,7 @@ router.get('/members/:groupId', memberGroups);
 router.post('/add-member', addMemberToGroup);
 router.post('/remove-member', removeMemberFromGroup);
 router.post('/leave-group', leaveGroup);
+router.post('/delete-group', deleteGroup);
 
 
 export default router;

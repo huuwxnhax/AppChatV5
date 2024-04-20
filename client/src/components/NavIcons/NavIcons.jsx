@@ -4,7 +4,7 @@ import "./NavIcons.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../actions/AuthActions";
-import { Backdrop, Box, Drawer, Fade, IconButton, Modal } from "@mui/material";
+import { Backdrop, Box, Drawer, Fade, IconButton, Menu, MenuItem, Modal } from "@mui/material";
 
 import Groups from "../Groups/Groups";
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -14,9 +14,11 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import FollowersCard from "../FollowersCard/FollowersCard";
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import ProfileModal from "../ProfileModal/ProfileModal";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 
 import Following from "../Following/Following";
+import ChangePasswordModal from "../Modal/ChangePasswordModal";
 
 const style = {
   position: 'absolute',
@@ -52,6 +54,29 @@ const NavIcons = ({ handleSelectUser }) => {
   const [openProfile, setOpenProfile] = useState(false);
   const handleOpenProfile = () => setOpenProfile(true);
   const handleCloseProfile = () => setOpenProfile(false);
+
+  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+  const handleMenuOpen = (event) => {
+    setMenuAnchorEl(event.currentTarget);
+  };
+
+  const [openChangePassword, setOpenChangePassword] = useState(false);
+  const handleOpenChangePassword = () => setOpenChangePassword(true);
+
+
+  const handleMenuItemClick = (action) => {
+    switch (action) {
+      case "profile":
+        handleOpenProfile();
+        break;
+      case "changePassword":
+        handleOpenChangePassword();
+        break;
+      default:
+        break;
+    }
+    setMenuAnchorEl(null);
+  };
 
   return (
       <div className="navIcons">
@@ -126,14 +151,33 @@ const NavIcons = ({ handleSelectUser }) => {
           </Drawer>
   
           {/*  profile */}
-          <IconButton onClick={handleOpenProfile}>
-            <PermIdentityIcon className="icons"/>
+          <IconButton onClick={handleMenuOpen}>
+            <MoreVertIcon className="icons"/>
           </IconButton>
+
+          <Menu
+            anchorEl={menuAnchorEl}
+            open={Boolean(menuAnchorEl)}
+            onClose={() => setMenuAnchorEl(null)}
+          >
+            <MenuItem onClick={() => handleMenuItemClick('profile')}>
+              Profile
+            </MenuItem>
+            <MenuItem onClick={() => handleMenuItemClick('changePassword')}>
+              Change password
+            </MenuItem>
+          </Menu>
+
           <ProfileModal
             modalOpened={openProfile}
             setModalOpened={setOpenProfile}
             data={user}
           />
+          <ChangePasswordModal 
+            modalOpened={openChangePassword}
+            setModalOpened={setOpenChangePassword}
+          />
+         
       </div>
   );
 };

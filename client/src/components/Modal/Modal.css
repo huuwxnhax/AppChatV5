@@ -1,0 +1,37 @@
+.btn-submit {
+  position: fixed;
+  background-color: #fff;
+  bottom: 0;
+  right: 0;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.modal {
+}
+
+.modal__header {
+}
+
+.modal__body {
+}
+
+.form-group {
+}
+
+.form-group {
+}
+
+.form-group {
+}
+
+.form-group {
+}
+
+.error-message {
+}
+
+.success-modal {
+}

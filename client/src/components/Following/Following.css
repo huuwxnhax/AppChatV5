@@ -1,5 +1,7 @@
 .drawer-container {
-  width: 15vw;
+  max-width: 30vw;
+  height: 100vh;
+  min-width: 25vw;
 }
 
 .drawer-header {

@@ -61,9 +61,9 @@ export const addMemberToGroup = async (req, res) => {
         }
 
         // Kiểm tra xem người thực hiện yêu cầu có phải là người tạo nhóm hay không
-        if (group.creator.toString() !== requestingUserId) {
-            return res.status(403).json({ message: "Only creator can add members" });
-        }
+        // if (group.creator.toString() !== requestingUserId) {
+        //     return res.status(403).json({ message: "Only creator can add members" });
+        // }
 
         // Thêm thành viên mới vào nhóm
         group.members.push(...memberIdToAdd);
@@ -122,7 +122,24 @@ export const leaveGroup = async (req, res) => {
         }
 
     } catch (error) {
-        
+        res.status(500).json(error);
+    }
+};
+
+export const deleteGroup = async (req, res) => {
+    const { groupId, requestingUserId } = req.body;
+
+    try {
+        const group = await GroupModel.findById(groupId);
+        if (!group) {
+            return res.status(404).json({ message: "Group not found" });
+        }
+        if(group.creator.toString() === requestingUserId) {
+            await group.delete();
+            res.status(200).json({ message: "Delete group successfully" });
+        }
+    } catch (error) {
+        res.status(500).json(error);
     }
 };
 

@@ -75,6 +75,7 @@
   border-radius: 8px;
   padding: 20px;
   flex: 1;
+  width: 100%;
 }
 
 .infoForm > div {

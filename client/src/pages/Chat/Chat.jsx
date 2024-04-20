@@ -63,18 +63,14 @@ const Chat = () => {
   }, [sendMessage]); 
 
 
+
   // Get the message from socket server
   useEffect(() => {
       socket.current.on("receive-message", (data) => {
-        // if (data.imageUrl instanceof ArrayBuffer) {
-        //   const imageUrl = URL.createObjectURL(new Blob([data.imageUrl]));
-        //   data.imageUrl = imageUrl;
-        // }
         setReceivedMessage(data);
         console.log("Message Received: ", data);
       });
     }, [socket]);
-
 
 
   const handleSelectUser = (userData) => {

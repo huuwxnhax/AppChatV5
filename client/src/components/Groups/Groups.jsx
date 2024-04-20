@@ -2,10 +2,11 @@ import { Button, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllUser, getUser } from '../../api/UserRequests';
-import './Groups.css'
-import { UilSearch } from '@iconscout/react-unicons'
+import './Groups.css';
+import { UilSearch } from '@iconscout/react-unicons';
 import { createChatGroup } from '../../api/GroupRequests';
 import { updateChatData } from '../../actions/ChatAction';
+
 const Groups = ({ closeModal }) => {
   const [userFollowing, setUserFollowing] = useState([]);
   const [followingDetails, setFollowingDetails] = useState([]);

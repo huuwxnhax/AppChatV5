@@ -6,6 +6,7 @@ import { createChat, findChat } from '../../api/ChatRequests';
 import Toaster from './Toaster';
 import { updateChatData } from '../../actions/ChatAction';
 
+
 const Following = ({ handleSelectUser,  closeModal }) => {
     const [userFollowing, setUserFollowing] = useState([]);
     const [followingDetails, setFollowingDetails] = useState([]);

@@ -168,3 +168,30 @@ export const getListFriends = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
+// change password
+export const changePassword = async (req, res) => {
+  const { username, currentPassword, newPassword } = req.body;
+  try {
+    console.log(username)
+    const user = await UserModel.findOne({ username: username });
+    if(!user)
+    {
+      return res.status(404).json({message: "User not found"})
+    }
+    const isCorrectPassword = await bcrypt.compare(currentPassword, user.password);
+    if(!isCorrectPassword) {
+      return res.status(400).json({message: "Incorrect Password"})
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedNewPassword = await bcrypt.hash(newPassword, salt);
+
+    user.password = hashedNewPassword;
+    await user.save();
+
+    res.status(200).json({message: "Password Changed Successfully"})
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+

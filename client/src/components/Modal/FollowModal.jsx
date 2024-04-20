@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from '../../api/UserRequests';
 import { addMembersToGroup } from '../../api/GroupRequests';
+import './Modal.css';
+import { Button } from '@mui/material';
 
 const FollowModal = ({groupChats, closeModal}) => {
     const [userFollowing, setUserFollowing] = useState([]);
@@ -84,7 +86,15 @@ const FollowModal = ({groupChats, closeModal}) => {
                 </div>
             ))}
         </div>
-        <button onClick={handleSubmit}>Submit</button>
+        <div className='btn-submit'>
+            <Button
+                onClick={handleSubmit}
+                variant="contained"
+                color="primary"
+            >
+                Add Members
+            </Button>
+        </div>
     </div>
   )
 }

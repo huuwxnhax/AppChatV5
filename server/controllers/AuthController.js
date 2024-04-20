@@ -165,3 +165,21 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ message: "Failed to login", error: err.message});
   }
 };
+
+// forgot password
+export const forgotPassword = async (req, res) => {
+  const { username } = req.body;
+  try {
+    const user = await UserModel.findOne({ username: username });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const otp = otpGenerator.generate(6, { digits: true, alphabets: false, upperCase: false, specialChars: false });
+    await OTP.create({ username, otp });
+    await sendOTP(username, otp);
+    res.status(200).json({ message: "OTP sent successfully" });
+  }
+  catch (error) {
+    res.status(500).json({ message: "Failed to send OTP", error: error.message });
+  }
+}
