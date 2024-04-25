@@ -22,6 +22,8 @@ const Chat = () => {
   const [currentChat, setCurrentChat] = useState(null);
   const [sendMessage, setSendMessage] = useState(null);
   const [receivedMessage, setReceivedMessage] = useState(null);
+  const [deletedMessage, setDeletedMessage] = useState(null);
+  const [messages, setMessages] = useState([]);
   // const [selectedUser, setSelectedUser] = useState(null);
 
   // Get the chat in chat section
@@ -29,7 +31,7 @@ const Chat = () => {
     const getChats = async () => {
       try {
         const { data: groupData } = await userChatGroups(user._id);
-        const { data: individualData  } = await userChats(user._id);
+        const { data: individualData } = await userChats(user._id);
 
         setGroupChats(groupData);
         setChats(individualData);
@@ -39,8 +41,6 @@ const Chat = () => {
     };
     getChats();
   }, [user._id, chatdata]);
-
-
 
   // Connect to Socket.io
   useEffect(() => {
@@ -56,29 +56,30 @@ const Chat = () => {
 
   // Send Message to socket server
   useEffect(() => {
-    if (sendMessage!==null) {
+    if (sendMessage !== null) {
       socket.current.emit("send-message", sendMessage);
       console.log("Message Sent to socket: ", sendMessage);
     }
-  }, [sendMessage]); 
-
-
+  }, [sendMessage]);
 
   // Get the message from socket server
   useEffect(() => {
-      socket.current.on("receive-message", (data) => {
-        setReceivedMessage(data);
-        console.log("Message Received: ", data);
-      });
-    }, [socket]);
+    socket.current.on("receive-message", (data) => {
+      setReceivedMessage(data);
+    });
+  }, [socket]);
 
+  useEffect(() => {
+    socket.current.on("message-deleted", (data) => {
+      setDeletedMessage(data);
+      console.log("Message Deleted data from socket to client: ", data);
+    });
+  }, [socket]);
 
   const handleSelectUser = (userData) => {
     // Xử lý khi người dùng được chọn
     setCurrentChat(userData);
   };
-  
-
 
   const checkOnlineStatus = (chat) => {
     const chatMember = chat.members.find((member) => member !== user._id);
@@ -88,7 +89,9 @@ const Chat = () => {
 
   const updateGroupChatList = async (groupId) => {
     try {
-      const updatedGroupChats = groupChats.filter(group => group._id !== groupId);
+      const updatedGroupChats = groupChats.filter(
+        (group) => group._id !== groupId
+      );
       setGroupChats(updatedGroupChats);
       setCurrentChat(null);
     } catch (error) {
@@ -143,7 +146,7 @@ const Chat = () => {
 
       <div className="Right-side-chat">
         <div style={{ width: "20rem", alignSelf: "flex-end" }}>
-          <NavIcons handleSelectUser={handleSelectUser}/>
+          <NavIcons handleSelectUser={handleSelectUser} />
         </div>
         <ChatBox
           chat={currentChat}
@@ -152,6 +155,7 @@ const Chat = () => {
           receivedMessage={receivedMessage}
           groupChats={groupChats}
           updateGroupChatList={updateGroupChatList}
+          deletedMessage={deletedMessage}
         />
       </div>
     </div>
