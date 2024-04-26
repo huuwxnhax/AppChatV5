@@ -23,7 +23,6 @@ const Chat = () => {
   const [sendMessage, setSendMessage] = useState(null);
   const [receivedMessage, setReceivedMessage] = useState(null);
   const [deletedMessage, setDeletedMessage] = useState(null);
-  const [messages, setMessages] = useState([]);
   // const [selectedUser, setSelectedUser] = useState(null);
 
   // Get the chat in chat section
@@ -67,14 +66,35 @@ const Chat = () => {
     socket.current.on("receive-message", (data) => {
       setReceivedMessage(data);
     });
+    console.log("Message Received from socket to client 1");
   }, [socket]);
 
   useEffect(() => {
     socket.current.on("message-deleted", (data) => {
       setDeletedMessage(data);
-      console.log("Message Deleted data from socket to client: ", data);
+      console.log("Message Received from socket to client 2");
     });
   }, [socket]);
+
+  useEffect(() => {
+    socket.current.on("group-deleted", (data) => {
+      console.log("Group Deleted data from socket to client: ", data);
+      const { groupId } = data;
+      const updatedGroupChats = groupChats.filter(
+        (group) => group._id !== groupId
+      );
+      setGroupChats(updatedGroupChats);
+      setCurrentChat(null);
+    });
+  }, [socket, groupChats]);
+
+  useEffect(() => {
+    socket.current.on("group-created", (data) => {
+      console.log("Group Created data from socket to client: ", data);
+      const { groupChat } = data;
+      setGroupChats([...groupChats, groupChat]);
+    });
+  }, [socket, groupChats]);
 
   const handleSelectUser = (userData) => {
     // Xử lý khi người dùng được chọn

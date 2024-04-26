@@ -76,4 +76,46 @@ io.on("connection", (socket) => {
       console.log(error);
     }
   });
+
+  // Handle socket event for group chat creation
+  socket.on("create-group", ({ receiverIds, groupChat }) => {
+    try {
+      console.log("Group Chat: ", groupChat);
+      // Broadcast event to all users in the chat room to inform about group chat creation
+      const chatMembers = activeUsers.filter((user) =>
+        receiverIds.includes(user.userId)
+      );
+      chatMembers.forEach((user) => {
+        if (user.socketId && user.userId !== socket.userId) {
+          io.to(user.socketId).emit("group-created", {
+            groupChat,
+          });
+          console.log("Sending from socket to :", user.userId);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  // Handle socket event for group chat deletion
+  socket.on("delete-group", ({ groupId, receiverIds }) => {
+    try {
+      // Broadcast event to all users in the chat room to inform about group chat deletion
+      const chatMembers = activeUsers.filter((user) =>
+        receiverIds.includes(user.userId)
+      );
+      chatMembers.forEach((user) => {
+        if (user.socketId && user.userId !== socket.userId) {
+          io.to(user.socketId).emit("group-deleted", {
+            groupId,
+            receiverIds,
+          });
+          console.log("Sending from socket to :", user.userId);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  });
 });

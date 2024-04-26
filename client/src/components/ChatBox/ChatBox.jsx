@@ -13,7 +13,6 @@ import UserMessage from "./UserMessage";
 import Logo from "../../img/logo.png";
 import MenuIcon from "@mui/icons-material/Menu";
 import { io } from "socket.io-client";
-import { v4 as uuidv4 } from "uuid";
 
 import {
   IconButton,
@@ -51,6 +50,10 @@ const ChatBox = ({
   const [openFollowModal, setOpenFollowModal] = useState(false);
 
   const [hoveredMessage, setHoveredMessage] = useState(null);
+
+  useEffect(() => {
+    socket.current = io("ws://localhost:8800");
+  }, [user]);
 
   // Handle image selection
   const handleFileChange = (event, senderId, chatId) => {
@@ -104,6 +107,12 @@ const ChatBox = ({
         requestingUserId: currentUser,
       });
       updateGroupChatList(chat._id);
+      socket.current.emit("delete-group", {
+        groupId: chat._id,
+        receiverIds: chat.members.filter(
+          (memberId) => memberId !== currentUser
+        ),
+      });
     } catch (error) {
       console.log(error);
     }
@@ -229,10 +238,6 @@ const ChatBox = ({
     }
   };
 
-  useEffect(() => {
-    socket.current = io("ws://localhost:8800");
-  }, [user]);
-
   const handleDeleteMessage = async (messageId) => {
     // Gửi yêu cầu xóa tin nhắn qua kết nối socket hiện tại
     await deleteMessage(messageId, chat._id);
@@ -256,7 +261,7 @@ const ChatBox = ({
         )
       );
     }
-  }, [deletedMessage, chat]);
+  }, [deletedMessage]);
 
   useEffect(() => {
     if (receivedMessage !== null && receivedMessage.chatId) {
