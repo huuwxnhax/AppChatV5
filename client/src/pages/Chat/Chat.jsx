@@ -12,6 +12,7 @@ import { userChatGroups } from "../../api/GroupRequests";
 
 const Chat = () => {
   const dispatch = useDispatch();
+
   const socket = useRef();
   const { user } = useSelector((state) => state.authReducer.authData);
   const chatdata = useSelector((state) => state.chatReducer.chatUsers);
@@ -43,7 +44,7 @@ const Chat = () => {
 
   // Connect to Socket.io
   useEffect(() => {
-    socket.current = io("ws://localhost:8800");
+    socket.current = io(process.env.REACT_APP_SOCKET_URL);
     socket.current.emit("new-user-add", user._id);
     socket.current.on("get-users", (users) => {
       setOnlineUsers(users);

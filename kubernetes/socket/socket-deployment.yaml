@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: socket-deployment
+spec:
+  selector:
+    matchLabels:
+      app: socket-deployment
+  template:
+    metadata:
+      labels:
+        app: socket-deployment
+    spec:
+      containers:
+      - name: socket-deployment
+        image: huuwxnhax/socketapp:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8800
