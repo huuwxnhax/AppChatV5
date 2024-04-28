@@ -7,12 +7,11 @@ import nodeMailer from "nodemailer";
 
 // Register new user
 export const registerUser = async (req, res) => {
-
   const salt = await bcrypt.genSalt(10);
   const hashedPass = await bcrypt.hash(req.body.password, salt);
-  req.body.password = hashedPass
+  req.body.password = hashedPass;
   const newUser = new UserModel(req.body);
-  const {username} = req.body
+  const { username } = req.body;
   try {
     // addition new
     const oldUser = await UserModel.findOne({ username });
@@ -33,36 +32,40 @@ export const registerUser = async (req, res) => {
   }
 };
 
-
 const sendOTP = async (username, otp) => {
   try {
-    console.log("host", process.env.EMAIL_HOST, process.env.EMAIL_USER, process.env.PASSWORD)
+    console.log(
+      "host",
+      process.env.EMAIL_HOST,
+      process.env.EMAIL_USER,
+      process.env.PASSWORD
+    );
 
-      let transporter = nodeMailer.createTransport({
-          host: process.env.EMAIL_HOST,
-          port: 587,
-          secure: false, 
-          auth: {
-              user: process.env.EMAIL_USER,
-              pass: process.env.PASSWORD
-          }
-      });
+    let transporter = nodeMailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.PASSWORD,
+      },
+    });
 
-      let mailOptions = await transporter.sendMail( {
-          from: process.env.EMAIL_USER,
-          to: username,
-          subject: "OTP for your account",
-          text: `Your OTP is ${otp}`
-      });
-      console.log("111111111111111111")
-      console.log("OTP sent to email", mailOptions);
+    let mailOptions = await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: username,
+      subject: "OTP for your account",
+      text: `Your OTP is ${otp}`,
+    });
+    console.log("111111111111111111");
+    console.log("OTP sent to email", mailOptions);
 
-      return mailOptions; // Trả về thông tin về email đã gửi thành công
+    return mailOptions; // Trả về thông tin về email đã gửi thành công
   } catch (error) {
-      console.error("Error sending OTP email:", error.message);
-      throw new Error("Failed to send OTP email"); // Xử lý lỗi bằng cách throw ra ngoại lệ
+    console.error("Error sending OTP email:", error.message);
+    throw new Error("Failed to send OTP email"); // Xử lý lỗi bằng cách throw ra ngoại lệ
   }
-}
+};
 
 export const sendOtpByEmail = async (req, res) => {
   try {
@@ -77,9 +80,14 @@ export const sendOtpByEmail = async (req, res) => {
     }
 
     // Tạo mã OTP mới
-    const otp = otpGenerator.generate(6, { digits: true, alphabets: false, upperCase: false, specialChars: false });
+    const otp = otpGenerator.generate(6, {
+      digits: true,
+      alphabets: false,
+      upperCase: false,
+      specialChars: false,
+    });
 
-    console.log("otp", otp)
+    console.log("otp", otp);
 
     // Lưu mã OTP vào cơ sở dữ liệu
     await OTP.create({ username, otp });
@@ -89,14 +97,16 @@ export const sendOtpByEmail = async (req, res) => {
 
     res.status(200).json({ message: "OTP sent successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Failed to send OTP", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to send OTP", error: error.message });
   }
 };
 
 export const registerUserWithOTP = async (req, res) => {
   try {
     const { username, password, firstname, lastname, otp } = req.body;
-    console.log("req body", req.body)
+    console.log("req body", req.body);
     // Kiểm tra xem người dùng đã tồn tại hay chưa
     const existingUser = await UserModel.findOne({ username });
     if (existingUser) {
@@ -132,7 +142,9 @@ export const registerUserWithOTP = async (req, res) => {
     // Trả về thông tin người dùng và token
     res.status(200).json({ user: newUser, token });
   } catch (error) {
-    res.status(500).json({ message: "Failed to register user", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to register user", error: error.message });
   }
 };
 
@@ -149,7 +161,7 @@ export const loginUser = async (req, res) => {
       const validity = await bcrypt.compare(password, user.password);
 
       if (!validity) {
-        res.status(400).json({message: "Incorrect password" });
+        res.status(400).json({ message: "Incorrect password" });
       } else {
         const token = jwt.sign(
           { username: user.username, id: user._id },
@@ -162,7 +174,7 @@ export const loginUser = async (req, res) => {
       res.status(404).json({ message: "User not found" });
     }
   } catch (err) {
-    res.status(500).json({ message: "Failed to login", error: err.message});
+    res.status(500).json({ message: "Failed to login", error: err.message });
   }
 };
 
@@ -174,12 +186,18 @@ export const forgotPassword = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    const otp = otpGenerator.generate(6, { digits: true, alphabets: false, upperCase: false, specialChars: false });
+    const otp = otpGenerator.generate(6, {
+      digits: true,
+      alphabets: false,
+      upperCase: false,
+      specialChars: false,
+    });
     await OTP.create({ username, otp });
     await sendOTP(username, otp);
     res.status(200).json({ message: "OTP sent successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to send OTP", error: error.message });
   }
-  catch (error) {
-    res.status(500).json({ message: "Failed to send OTP", error: error.message });
-  }
-}
+};

@@ -379,16 +379,6 @@ const ChatBox = ({
                     }
                   }}
                 >
-                  {hoveredMessage === message._id && (
-                    <div className="message-options">
-                      <button
-                        onClick={() => handleDeleteMessage(message._id)}
-                        className="delete-message"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
                   <UserMessage
                     userId={message.senderId}
                     currentUser={currentUser}
@@ -438,6 +428,16 @@ const ChatBox = ({
                       {format(message.createdAt)}
                     </span>
                   </div>
+                  {hoveredMessage === message._id && (
+                    <div className="message-options">
+                      <button
+                        onClick={() => handleDeleteMessage(message._id)}
+                        className="delete-message"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

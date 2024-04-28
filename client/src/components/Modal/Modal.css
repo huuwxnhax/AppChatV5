@@ -13,25 +13,13 @@
 }
 
 .modal__header {
+  text-align: center;
 }
-
-.modal__body {
-}
-
 .form-group {
-}
-
-.form-group {
-}
-
-.form-group {
-}
-
-.form-group {
-}
-
-.error-message {
-}
-
-.success-modal {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  padding: 10px;
+  position: relative;
 }
