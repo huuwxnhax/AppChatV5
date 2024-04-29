@@ -2,9 +2,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: app-ingress
+  namespace: workshop
 spec:
   rules:
-  - host: example.com
+  - host: https://63E9C1252454CF8A5B3E7A0FBE724FCF.gr7.us-east-1.eks.amazonaws.com
     http:
       paths:
       - path: /client
