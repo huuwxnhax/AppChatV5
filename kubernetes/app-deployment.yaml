@@ -3,9 +3,13 @@ kind: Ingress
 metadata:
   name: app-ingress
   namespace: workshop
+  anotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80,"HTTPS":443}]'
 spec:
   rules:
-  - host: https://63E9C1252454CF8A5B3E7A0FBE724FCF.gr7.us-east-1.eks.amazonaws.com
+  - host: https://BE614079350FFF4BA8694F2634F29B40.sk1.us-east-1.eks.amazonaws.com
     http:
       paths:
       - path: /client
@@ -29,7 +33,7 @@ spec:
             name: server-service
             port:
               number: 5000
-  tls:
-  - hosts:
-    - example.com
-    secretName: example-tls-secret
+  # tls:
+  # - hosts:
+  #   - example.com
+  #   secretName: example-tls-secret
