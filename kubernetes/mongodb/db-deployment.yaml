@@ -40,14 +40,4 @@ spec:
       - name: mongodb-persistent-storage
         persistentVolumeClaim:
           claimName: mongodb-pvc
----     
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mongodb-pvc
-spec:
-  resources:
-    requests:
-      storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
+
