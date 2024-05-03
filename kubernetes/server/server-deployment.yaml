@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: server-deployment
-        image: huuwxnhax/serverapp:v1
+        image: huuwxnhax/serverapp:v2
         ports:
         - containerPort: 5000
         env:
