@@ -9,7 +9,7 @@ metadata:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80,"HTTPS":443}]'
 spec:
   rules:
-  - host: https://BE614079350FFF4BA8694F2634F29B40.sk1.us-east-1.eks.amazonaws.com
+  - host: https://chat-app.sk1.us-east-1.eks.amazonaws.com
     http:
       paths:
       - path: /client
