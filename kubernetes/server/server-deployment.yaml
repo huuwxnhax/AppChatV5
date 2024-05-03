@@ -35,7 +35,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: server-secret
-              key: JWTKEYs
+              key: JWTKEY
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
             secretKeyRef:
