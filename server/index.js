@@ -4,38 +4,35 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 
-import AuthRoute from './routes/AuthRoute.js'
-import UserRoute from './routes/UserRoute.js'
-import UploadRoute from './routes/UploadRoute.js'
-import ChatRoute from './routes/ChatRoute.js'
-import GroupRoute from './routes/GroupRoute.js'
-import MessageRoute from './routes/MessageRoute.js'
+import AuthRoute from "./routes/AuthRoute.js";
+import UserRoute from "./routes/UserRoute.js";
+import UploadRoute from "./routes/UploadRoute.js";
+import ChatRoute from "./routes/ChatRoute.js";
+import GroupRoute from "./routes/GroupRoute.js";
+import MessageRoute from "./routes/MessageRoute.js";
 
 const app = express();
-
 
 // middleware
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 // to serve images inside public folder
-app.use(express.static('public')); 
-app.use('/images', express.static('images'));
-
+app.use(express.static("public"));
+app.use("/images", express.static("images"));
 
 dotenv.config();
 const PORT = process.env.PORT;
 
-const CONNECTION =process.env.MONGODB_CONNECTION;
+const CONNECTION = process.env.MONGO_STR;
 mongoose
   .connect(CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => app.listen(PORT, () => console.log(`Listening at Port ${PORT}`)))
   .catch((error) => console.log(`${error} did not connect`));
 
-
-app.use('/auth', AuthRoute);
-app.use('/user', UserRoute)
-app.use('/upload', UploadRoute)
-app.use('/chat', ChatRoute)
-app.use('/group', GroupRoute)
-app.use('/message', MessageRoute)
+app.use("/auth", AuthRoute);
+app.use("/user", UserRoute);
+app.use("/upload", UploadRoute);
+app.use("/chat", ChatRoute);
+app.use("/group", GroupRoute);
+app.use("/message", MessageRoute);
