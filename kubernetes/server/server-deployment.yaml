@@ -30,7 +30,7 @@ spec:
               name: mongodb-secret
               key: password
         - name: MONGO_STR
-          value: mongodb://appchat-db-service:27017/appchat?directConnection=true
+          value: mongodb://appchat-db-service:27017/ChatAppDB?directConnection=true
         - name: JWTKEY
           valueFrom:
             secretKeyRef:
