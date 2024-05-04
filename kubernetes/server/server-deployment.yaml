@@ -31,6 +31,8 @@ spec:
               key: password
         - name: MONGO_STR
           value: mongodb://appchat-db-service:27017/ChatAppDB?directConnection=true
+        - name: PORT
+          value: "5000"
         - name: JWTKEY
           valueFrom:
             secretKeyRef:
