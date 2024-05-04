@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-  - host: appchatzolo.com
+  - host: appchatzolo.huuwxnhax.xyz
     http:
       paths:
       - path: /client
