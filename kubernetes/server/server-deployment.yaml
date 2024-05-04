@@ -24,6 +24,8 @@ spec:
             secretKeyRef:
               name: mongodb-secret
               key: username
+        - name: PORT
+          value: "5000"
         - name: MONGO_PASSWORD
           valueFrom:
             secretKeyRef:
