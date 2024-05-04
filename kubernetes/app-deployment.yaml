@@ -9,7 +9,7 @@ metadata:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80,"HTTPS":443}]'
 spec:
   rules:
-  - host: k8s-workshop-app-ingress.us-east-1.elb.amazonaws.com
+  - host: appchatzolo.com
     http:
       paths:
       - path: /client
