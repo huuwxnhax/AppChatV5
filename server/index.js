@@ -22,12 +22,12 @@ app.use(express.static("public"));
 app.use("/images", express.static("images"));
 
 dotenv.config();
-const PORT = process.env.PORT || 5000;
+const port = process.env.PORT || 5000;
 
 const CONNECTION = process.env.MONGO_STR;
 mongoose
   .connect(CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => app.listen(PORT, () => console.log(`Listening at Port ${PORT}`)))
+  .then(() => app.listen(port, () => console.log(`Listening at Port ${port}`)))
   .catch((error) => console.log(`${error} did not connect`));
 
 app.use("/auth", AuthRoute);
