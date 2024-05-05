@@ -12,9 +12,17 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-export const getUser = (userId) => API.get(`/user/${userId}`);
-export const updateUser = (id, formData) => API.put(`/user/${id}`, formData);
-export const getAllUser = () => API.get("/user");
-export const followUser = (id, data) => API.put(`/user/${id}/follow`, data);
-export const unfollowUser = (id, data) => API.put(`/user/${id}/unfollow`, data);
-export const changePassword = (data) => API.post("/user/change-password", data);
+export const getUser = (userId) => API.get(`/api/user/${userId}`);
+
+export const updateUser = (id, formData) =>
+  API.put(`/api/user/${id}`, formData);
+
+export const getAllUser = () => API.get("/api/user");
+
+export const followUser = (id, data) => API.put(`/api/user/${id}/follow`, data);
+
+export const unfollowUser = (id, data) =>
+  API.put(`/api/user/${id}/unfollow`, data);
+
+export const changePassword = (data) =>
+  API.post("/api/user/change-password", data);

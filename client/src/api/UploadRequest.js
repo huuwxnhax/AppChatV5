@@ -12,5 +12,5 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-export const uploadImage = (data) => API.post("/upload/", data);
-export const uploadPost = (data) => API.post("/posts", data);
+export const uploadImage = (data) => API.post("/api/upload/", data);
+export const uploadPost = (data) => API.post("/api/posts", data);

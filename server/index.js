@@ -30,9 +30,9 @@ mongoose
   .then(() => app.listen(port, () => console.log(`Listening at Port ${port}`)))
   .catch((error) => console.log(`${error} did not connect`));
 
-app.use("/auth", AuthRoute);
-app.use("/user", UserRoute);
-app.use("/upload", UploadRoute);
-app.use("/chat", ChatRoute);
-app.use("/group", GroupRoute);
-app.use("/message", MessageRoute);
+app.use("/api/auth", AuthRoute);
+app.use("/api/user", UserRoute);
+app.use("/api/upload", UploadRoute);
+app.use("/api/chat", ChatRoute);
+app.use("/api/group", GroupRoute);
+app.use("/api/message", MessageRoute);
