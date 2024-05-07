@@ -6,7 +6,7 @@ metadata:
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
 spec:
   ingressClassName: alb
   rules:
@@ -20,13 +20,13 @@ spec:
             name: client-service
             port:
               number: 3000
-      # - path: /socket
-      #   pathType: Prefix
-      #   backend:
-      #     service:
-      #       name: socket-service
-      #       port:
-      #         number: 8800
+      - path: /socket
+        pathType: Prefix
+        backend:
+          service:
+            name: socket-service
+            port:
+              number: 8800
       - path: /api
         pathType: Prefix
         backend:
@@ -34,7 +34,3 @@ spec:
             name: server-service
             port:
               number: 5000
-  # tls:
-  # - hosts:
-  #   - example.com
-  #   secretName: example-tls-secret
