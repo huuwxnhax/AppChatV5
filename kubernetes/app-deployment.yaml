@@ -9,13 +9,18 @@ metadata:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
 spec:
   ingressClassName: alb
+  defaultBackend:
+    service:
+      name: default-http-backend
+      port:
+        number: 80
   rules:
   - host: appchatzolo.huuwxnhax.xyz
     http:
       paths:
       - path: /
         pathType: Prefix
-        defaultBackend:
+        backend:
           service:
             name: client-service
             port:
