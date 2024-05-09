@@ -30,6 +30,10 @@ mongoose
   .then(() => app.listen(port, () => console.log(`Listening at Port ${port}`)))
   .catch((error) => console.log(`${error} did not connect`));
 
+app.get("/healthcheck", (req, res) => {
+  res.send("Server is running");
+});
+
 app.use("/api/auth", AuthRoute);
 app.use("/api/user", UserRoute);
 app.use("/api/upload", UploadRoute);
