@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-  - host: appchatzolo.huuwxnhax.xyz
+  - host: k8s-workshop-appingre-5f98c91283-1767721019.us-east-1.elb.amazonaws.com
     http:
       paths:
       - path: /
