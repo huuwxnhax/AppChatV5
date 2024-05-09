@@ -14,7 +14,7 @@ spec:
   - host: appchatzolo.huuwxnhax.xyz
     http:
       paths:
-      - path: /
+      - path: /auth
         pathType: Prefix
         backend:
           service:
