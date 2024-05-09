@@ -15,7 +15,7 @@ spec:
       paths:
       - path: /
         pathType: Prefix
-        backend:
+        defaultBackend:
           service:
             name: client-service
             port:
