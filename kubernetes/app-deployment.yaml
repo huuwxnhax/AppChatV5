@@ -10,6 +10,11 @@ metadata:
     # alb.ingress.kubernetes.io/certificate-arn: arn:aws:elasticloadbalancing:us-east-1:331213786607:loadbalancer/app/k8s-workshop-appingre-5f98c91283/8d8a20aedceddbe6
 spec:
   ingressClassName: alb
+  defaultBackend:
+    service:
+      name: client-service
+      port:
+        number: 3000
   rules:
   - host: appchatzolo.huuwxnhax.xyz
     http:
