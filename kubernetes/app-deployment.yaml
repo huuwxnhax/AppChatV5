@@ -6,7 +6,7 @@ metadata:
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
     # alb.ingress.kubernetes.io/certificate-arn: arn:aws:elasticloadbalancing:us-east-1:331213786607:loadbalancer/app/k8s-workshop-appingre-5f98c91283/8d8a20aedceddbe6
 spec:
   ingressClassName: alb
