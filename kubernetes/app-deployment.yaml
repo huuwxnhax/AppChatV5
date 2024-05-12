@@ -14,7 +14,7 @@ spec:
     service:
       name: client-service
       port:
-        number: 80
+        number: 3000
   rules:
   - host: appchatzolo.huuwxnhax.xyz
     http:
