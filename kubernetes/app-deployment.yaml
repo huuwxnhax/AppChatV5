@@ -7,7 +7,7 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:elasticloadbalancing:us-east-1:331213786607:loadbalancer/app/k8s-workshop-appingre-5f98c91283/8d8a20aedceddbe6
+    # alb.ingress.kubernetes.io/certificate-arn: arn:aws:elasticloadbalancing:us-east-1:331213786607:loadbalancer/app/k8s-workshop-appingre-5f98c91283/8d8a20aedceddbe6
 spec:
   ingressClassName: alb
   rules:
@@ -21,17 +21,10 @@ spec:
             name: client-service
             port:
               number: 3000
-      # - path: /socket
-      #   pathType: Prefix
-      #   backend:
-      #     service:
-      #       name: socket-service
-      #       port:
-      #         number: 8800
-      # - path: /api
-      #   pathType: Prefix
-      #   backend:
-      #     service:
-      #       name: server-service
-      #       port:
-      #         number: 5000
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: server-service
+            port:
+              number: 5000
