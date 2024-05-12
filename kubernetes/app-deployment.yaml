@@ -17,6 +17,11 @@ spec:
         number: 3000
   rules:
   - host: appchatzolo.huuwxnhax.xyz
+    allowedPaths:
+    - pathType: Prefix
+      path: /api
+    - pathType: Prefix
+      path: /auth
     http:
       paths:
       - path: /api
