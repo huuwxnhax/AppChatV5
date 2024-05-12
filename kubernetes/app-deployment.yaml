@@ -16,7 +16,7 @@ spec:
       port:
         number: 80
   rules:
-  - host: k8s-workshop-appingre-5f98c91283-803104494.us-east-1.elb.amazonaws.com
+  - host: appchatzolo.huuwxnhax.xyz
     http:
       paths:
       - path: /api
