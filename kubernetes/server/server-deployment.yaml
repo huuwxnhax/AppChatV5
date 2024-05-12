@@ -73,7 +73,7 @@ spec:
               key: PASSWORD
         ports:
         - containerPort: 5000
-        liveProbe:
+        livenessProbe:
           httpGet:
             path: /
             port: 5000
