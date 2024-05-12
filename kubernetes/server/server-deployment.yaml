@@ -16,8 +16,6 @@ spec:
       containers:
       - name: server-deployment
         image: huuwxnhax/serverapp:v2
-        ports:
-        - containerPort: 5000
         env:
         - name: MONGO_USERNAME
           valueFrom:
@@ -73,4 +71,18 @@ spec:
             secretKeyRef:
               name: server-secret
               key: PASSWORD
+        ports:
+        - containerPort: 5000
+        liveProbe:
+          httpGet:
+            path: /
+            port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 10
 
