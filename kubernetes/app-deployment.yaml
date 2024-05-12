@@ -16,7 +16,7 @@ spec:
       port:
         number: 3000
   rules:
-  - host: appchatzolo.huuwxnhax.xyz
+  - host: k8s-workshop-appingre-5f98c91283-803104494.us-east-1.elb.amazonaws.com
     http:
       paths:
       - path: /api
