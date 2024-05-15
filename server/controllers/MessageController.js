@@ -12,14 +12,16 @@ const upload = multer({
   fileFilter: (req, file, cb) => {
     // allow file pdf, doc, docx, jpg, jpeg, png, mp4, video
     const allowedFileTypes = /jpeg|jpg|png|docx|doc|pdf|mp4/;
-    const extension = allowedFileTypes.test(path.extname(file.originalname).toLowerCase());
+    const extension = allowedFileTypes.test(
+      path.extname(file.originalname).toLowerCase()
+    );
     const mimeType = allowedFileTypes.test(file.mimetype);
     if (extension && mimeType) {
       return cb(null, true);
     } else {
-      cb('Error: Images only! (jpeg, jpg, png)');
+      cb("Error: Images only! (jpeg, jpg, png)");
     }
-  }, 
+  },
 });
 
 // AWS S3 Client
@@ -34,7 +36,6 @@ const s3 = new S3Client({
 // Middleware to handle file upload
 const singleFileUpload = upload.single("image");
 
-
 // Add Message
 export const addMessage = async (req, res) => {
   // Xử lý lỗi khi upload file
@@ -45,7 +46,7 @@ export const addMessage = async (req, res) => {
 
     // Lấy dữ liệu từ body của request
     const { chatId, senderId, text } = req.body;
-
+    const hiddenFor = "";
     // Kiểm tra xem có file được gửi lên không và lưu trữ đường dẫn tương ứng
     let imageUrl, videoUrl, pdfUrl, docxUrl;
     if (req.file) {
@@ -98,7 +99,8 @@ export const addMessage = async (req, res) => {
       imageUrl,
       videoUrl,
       pdfUrl,
-      docxUrl
+      docxUrl,
+      hiddenFor,
     });
 
     try {
@@ -110,6 +112,31 @@ export const addMessage = async (req, res) => {
       res.status(500).json({ error: "Unable to save message to database" });
     }
   });
+};
+
+export const deleteMessageOneSide = async (req, res) => {
+  const { _id } = req.params;
+  const { currentUser } = req.body;
+  console.log("id:", _id);
+  console.log("currentUser:", currentUser);
+  const result = await MessageModel.findByIdAndUpdate(
+    _id,
+    { hiddenFor: currentUser },
+    { new: true }
+  );
+  console.log("Result:", result);
+  res.status(200).json(result);
+};
+
+export const getHiddenMessagesForUser = async (req, res) => {
+  const { messageId } = req.params;
+  const { userId } = req.body;
+  try {
+    const result = await MessageModel.find({ messageId, hiddenFor: userId });
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 };
 
 // Get Messages

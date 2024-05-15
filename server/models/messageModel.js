@@ -11,18 +11,25 @@ const MessageSchema = new mongoose.Schema(
     text: {
       type: String,
     },
-    imageUrl: { // Thêm trường imageUrl
+    imageUrl: {
+      // Thêm trường imageUrl
       type: String,
     },
-    videoUrl: { // Thêm trường videoUrl
+    videoUrl: {
+      // Thêm trường videoUrl
       type: String,
     },
-    pdfUrl: { // Thêm trường pdfUrl
+    pdfUrl: {
+      // Thêm trường pdfUrl
       type: String,
     },
-    docxUrl: { // Thêm trường docxUrl
+    docxUrl: {
+      // Thêm trường docxUrl
       type: String,
-    }
+    },
+    hiddenFor: {
+      type: String,
+    },
   },
   {
     timestamps: true,
@@ -30,4 +37,4 @@ const MessageSchema = new mongoose.Schema(
 );
 
 const MessageModel = mongoose.model("Message", MessageSchema);
-export default MessageModel
+export default MessageModel;

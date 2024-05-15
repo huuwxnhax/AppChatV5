@@ -3,6 +3,8 @@ import { useRef } from "react";
 import {
   addMessage,
   deleteMessage,
+  deleteMessageOneSide,
+  getHiddenMessagesForUser,
   getMessages,
 } from "../../api/MessageRequests";
 import { getUser } from "../../api/UserRequests";
@@ -12,6 +14,7 @@ import InputEmoji from "react-input-emoji";
 import UserMessage from "./UserMessage";
 import Logo from "../../img/logo.png";
 import MenuIcon from "@mui/icons-material/Menu";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { io } from "socket.io-client";
 
 import {
@@ -27,6 +30,7 @@ import MembersModal from "../Modal/MembersModal";
 import FollowModal from "../Modal/FollowModal";
 import { deleteGroup, leaveGroup } from "../../api/GroupRequests";
 import { useSelector } from "react-redux";
+import MoreVert from "@mui/icons-material/MoreVert";
 
 const ChatBox = ({
   chat,
@@ -50,6 +54,8 @@ const ChatBox = ({
   const [openFollowModal, setOpenFollowModal] = useState(false);
 
   const [hoveredMessage, setHoveredMessage] = useState(null);
+  const [showDeleteOptions, setShowDeleteOptions] = useState(false);
+
   useEffect(() => {
     socket.current = io(process.env.REACT_APP_SOCKET_URL);
   }, [user]);
@@ -237,7 +243,7 @@ const ChatBox = ({
     }
   };
 
-  const handleDeleteMessage = async (messageId) => {
+  const handleDeleteMessage = async (messageId, deleteType) => {
     // Gửi yêu cầu xóa tin nhắn qua kết nối socket hiện tại
     await deleteMessage(messageId, chat._id);
     setMessages((prevMessages) =>
@@ -429,12 +435,32 @@ const ChatBox = ({
                   </div>
                   {hoveredMessage === message._id && (
                     <div className="message-options">
-                      <button
+                      <IconButton
                         onClick={() => handleDeleteMessage(message._id)}
                         className="delete-message"
                       >
-                        Delete
-                      </button>
+                        <DeleteOutlineIcon />
+                      </IconButton>
+                      {/* {showDeleteOptions && (
+                        <div className="delete-options">
+                          <button
+                            onClick={() =>
+                              handleDeleteMessage(message._id, "one-side")
+                            }
+                            className="delete-one-side"
+                          >
+                            Xóa 1 phía
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleDeleteMessage(message._id, "both-sides")
+                            }
+                            className="delete-both-sides"
+                          >
+                            Xóa 2 phía
+                          </button>
+                        </div>
+                      )} */}
                     </div>
                   )}
                 </div>
