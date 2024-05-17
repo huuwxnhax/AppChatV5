@@ -1,6 +1,12 @@
+require("dotenv").config();
+const corOgirin = process.env.ORIGIN_URI;
+
 const io = require("socket.io")(8800, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: corOgirin,
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
+    credentials: true,
   },
 });
 

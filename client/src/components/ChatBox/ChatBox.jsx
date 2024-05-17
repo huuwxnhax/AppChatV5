@@ -317,11 +317,13 @@ const ChatBox = ({
                         >
                           Add Members
                         </MenuItem>
-                        <MenuItem
-                          onClick={() => handleMenuItemClick("leaveGroup")}
-                        >
-                          Leave Group
-                        </MenuItem>
+                        {currentUser !== chat.creator && (
+                          <MenuItem
+                            onClick={() => handleMenuItemClick("leaveGroup")}
+                          >
+                            Leave Group
+                          </MenuItem>
+                        )}
                         {currentUser === chat.creator && (
                           <MenuItem
                             onClick={() => handleMenuItemClick("deleteGroup")}
