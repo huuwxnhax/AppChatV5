@@ -338,8 +338,7 @@ const ChatBox = ({
                       <img
                         src={
                           userData?.profilePicture
-                            ? process.env.REACT_APP_PUBLIC_FOLDER +
-                              userData.profilePicture
+                            ? userData.profilePicture
                             : process.env.REACT_APP_PUBLIC_FOLDER +
                               "defaultProfile.png"
                         }

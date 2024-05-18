@@ -22,7 +22,7 @@ const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
-      if(event.target.name === "profileImage") {
+      if (event.target.name === "profileImage") {
         setProfileImage(img);
         console.log(img);
       }
@@ -30,7 +30,7 @@ const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
   };
 
   // form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let UserData = formData;
     if (profileImage) {
@@ -40,7 +40,9 @@ const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
       data.append("file", profileImage);
       UserData.profilePicture = fileName;
       try {
-        dispatch(uploadImage(data));
+        const response = await dispatch(uploadImage(data));
+        UserData.profilePicture = response.fileUrl;
+        console.log(response.fileUrl);
       } catch (err) {
         console.log(err);
       }
@@ -65,11 +67,17 @@ const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
       <form className="inforForm" onSubmit={handleSubmit}>
         <div className="backgroundImage-section">
           <img
-              src={formData.profilePicture? process.env.REACT_APP_PUBLIC_FOLDER + formData.profilePicture : process.env.REACT_APP_PUBLIC_FOLDER + "defaultProfile.png"}
-              alt="Profile"
-              className="backgroundImage-infor"
+            src={
+              formData.profilePicture
+                ? formData.profilePicture
+                : process.env.REACT_APP_PUBLIC_FOLDER + "defaultProfile.png"
+            }
+            alt="Profile"
+            className="backgroundImage-infor"
           />
-          <span>{formData.firstname} {formData.lastname}</span>
+          <span>
+            {formData.firstname} {formData.lastname}
+          </span>
         </div>
         <div className="textInfor-section">
           <div>
@@ -90,7 +98,7 @@ const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
               className="infoInput"
             />
           </div>
-  
+
           <div>
             <input
               value={formData.worksAt}
@@ -101,7 +109,7 @@ const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
               className="infoInput"
             />
           </div>
-  
+
           <div>
             <input
               value={formData.livesIn}
@@ -120,7 +128,7 @@ const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
               className="infoInput"
             />
           </div>
-  
+
           <div>
             Profile image
             <input type="file" name="profileImage" onChange={onImageChange} />

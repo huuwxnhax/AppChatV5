@@ -142,8 +142,7 @@ const Groups = ({ closeModal }) => {
                 <img
                   src={
                     user.data.profilePicture
-                      ? process.env.REACT_APP_PUBLIC_FOLDER +
-                        user.data.profilePicture
+                      ? user.data.profilePicture
                       : process.env.REACT_APP_PUBLIC_FOLDER +
                         "defaultProfile.png"
                   }

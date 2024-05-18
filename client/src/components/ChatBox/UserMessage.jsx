@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getUser } from "../../api/UserRequests";
 
-const UserMessage = ({ userId , currentUser}) => {
+const UserMessage = ({ userId, currentUser }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -18,14 +18,15 @@ const UserMessage = ({ userId , currentUser}) => {
   }, [userId]);
 
   return user ? (
-    <div className={
-        user._id === currentUser
-        ? "user-Message own"
-        : "user-Message"
-      }
+    <div
+      className={user._id === currentUser ? "user-Message own" : "user-Message"}
     >
       <img
-        src={user.profilePicture ? process.env.REACT_APP_PUBLIC_FOLDER + user.profilePicture : process.env.REACT_APP_PUBLIC_FOLDER + "defaultProfile.png"}
+        src={
+          user.profilePicture
+            ? user.profilePicture
+            : process.env.REACT_APP_PUBLIC_FOLDER + "defaultProfile.png"
+        }
         alt="Profile"
         className="imgProfile"
         style={{ width: "40px", height: "40px" }}
